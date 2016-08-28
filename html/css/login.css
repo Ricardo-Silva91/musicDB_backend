@@ -7,7 +7,7 @@
 body, html {
     height: 100%;
     background-repeat: no-repeat;
-    background-image: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));
+    background-image: linear-gradient(rgb(104, 145, 162), #3e2222);
 }
 
 .card-container.card {
@@ -78,7 +78,7 @@ body, html {
     box-sizing: border-box;
 }
 
-.form-signin #inputEmail,
+.form-signin #inputAlias,
 .form-signin #inputPassword {
     direction: ltr;
     height: 44px;
