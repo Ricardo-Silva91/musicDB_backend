@@ -1,3 +1,4 @@
+var http = require('http');
 var express = require('express');
 var app = express();
 var fs = require("fs");
@@ -18,6 +19,16 @@ app.use(function (req, res, next) {
     next();
 });
 
+var bodyParser = require('body-parser');
+var jsonfile = require('jsonfile');
+
+
+app.use(bodyParser.json());
+
+app.use(bodyParser.urlencoded({
+
+    extended: true
+}));
 
 app.get('/listAlbums', function (req, res) {
     fs.readFile( __dirname + "/data/" + "albums.json", 'utf8', function (err, data) {
@@ -35,7 +46,7 @@ app.get('/getAlbumDetails/:id', function (req, res) {
         if (id<0 || id>= albums.length)
         {
             console.log("id out of bounds");
-            res.status(400).end(JSON.stringify('{\'error\': \'id out of bounds\'}'));
+            res.status(204).end(JSON.stringify('{\'error\': \'id out of bounds\'}'));
             return
         }
         var album = albums[id];
@@ -88,7 +99,7 @@ app.get('/login', function (req, res) {
                 else
                 {
                     console.log('wrong pass for user ' + alias);
-                    res.status(400).json({
+                    res.status(200).json({
                         alias: alias,
                         token: null
                     })
@@ -99,7 +110,7 @@ app.get('/login', function (req, res) {
         }
 
         console.log('user ' + alias + ' not found');
-        res.status(400).json({
+        res.status(204).json({
             alias: alias,
             token: null
         })
@@ -143,7 +154,7 @@ app.get('/logout', function (req, res) {
         else
         {
             console.log('token injection detected');
-            res.status(400).json({
+            res.status(204).json({
                 alias: null,
                 logout: 'fail'
             })

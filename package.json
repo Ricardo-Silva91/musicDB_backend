@@ -24,7 +24,10 @@
   },
   "homepage": "https://github.com/Ricardo-Silva91/musicDB_backend#readme",
   "dependencies": {
+    "body-parser": "^1.15.2",
     "express": "^4.14.0",
-    "fs": "0.0.1-security"
+    "fs": "0.0.1-security",
+    "http": "0.0.0",
+    "jsonfile": "^2.3.1"
   }
 }

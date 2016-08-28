@@ -7,22 +7,25 @@ $("form").on('submit', function (e) {
     var pass = $('#inputPassword')[0].value;
     var url_rest = base_url_rest + 'login?alias=' + alias + '&pass=' + pass;
 
+
+    //alert('b');
+
     $.ajax({
         url: url_rest
     }).then(function(data) {
 
-        alert(JSON.stringify(data));
-/*
         var json = data;
-        if(json['mail']==mail && json['token']!=null)
+        if(json['alias']==alias && json['token']!=null)
         {
-            //alert(data);
-            document.cookie="PTapp_token = "+json['token']+";path=/;";
+            document.cookie="MusicDB_token = "+json['token']+";path=/;";
             window.location.href = "home.html";
         }
-*/
-    });
+        else
+        {
+            alert('wrong alias/password.\nPlease try again.')
+        }
 
+    });
 
     //stop form submission
     e.preventDefault();
