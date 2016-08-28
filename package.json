@@ -1,0 +1,30 @@
+{
+  "name": "musicdb_backend",
+  "version": "1.0.0",
+  "description": "nodejs server for backend operations for the music logging app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ricardo-Silva91/musicDB_backend.git"
+  },
+  "keywords": [
+    "node",
+    "js",
+    "music",
+    "logging",
+    "backend"
+  ],
+  "author": "rofler",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ricardo-Silva91/musicDB_backend/issues"
+  },
+  "homepage": "https://github.com/Ricardo-Silva91/musicDB_backend#readme",
+  "dependencies": {
+    "express": "^4.14.0",
+    "fs": "0.0.1-security"
+  }
+}
