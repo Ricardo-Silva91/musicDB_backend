@@ -2,7 +2,9 @@ var http = require('http');
 var express = require('express');
 var app = express();
 var fs = require("fs");
+var async = require("async");
 
+var dir_path = __dirname + '/data/';
 
 
 app.use(function (req, res, next) {
@@ -31,35 +33,31 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.get('/listAlbums', function (req, res) {
-    fs.readFile( __dirname + "/data/" + "albums.json", 'utf8', function (err, data) {
+    fs.readFile(__dirname + "/data/" + "albums.json", 'utf8', function (err, data) {
         //console.log( data );
-        res.end( data );
+        res.end(data);
     });
 });
 
 
 app.get('/getAlbumDetails/:id', function (req, res) {
     // First read existing users.
-    fs.readFile( __dirname + "/data/" + "albums.json", 'utf8', function (err, data) {
-        var albums = JSON.parse( data );
+    fs.readFile(__dirname + "/data/" + "albums.json", 'utf8', function (err, data) {
+        var albums = JSON.parse(data);
         var id = req.params.id;
-        if (id<0 || id>= albums.length)
-        {
+        if (id < 0 || id >= albums.length) {
             console.log("id out of bounds");
-            res.status(204).end(JSON.stringify('{\'error\': \'id out of bounds\'}'));
+            res.status(200).end(JSON.stringify('{\'error\': \'id out of bounds\'}'));
             return
         }
         var album = albums[id];
-        if(album['id']==id)
-        {
+        if (album['id'] == id) {
             console.log('id matches position');
-            res.status(200).end( JSON.stringify(album));
+            res.status(200).end(JSON.stringify(album));
         }
-        else
-        {
+        else {
             for (var i = albums.length - 1; i >= 0; i--) {
-                if(albums[i]['id'] == id)
-                {
+                if (albums[i]['id'] == id) {
                     console.log("list not sorted");
                     res.status(200).end(JSON.stringify(albums[i]));
                 }
@@ -70,20 +68,17 @@ app.get('/getAlbumDetails/:id', function (req, res) {
 
 
 app.get('/login', function (req, res) {
-    fs.readFile( __dirname + "/data/" + "users.json", 'utf8', function (err, data) {
+    fs.readFile(__dirname + "/data/" + "users.json", 'utf8', function (err, data) {
         var users = JSON.parse(data);
         var alias = req.query.alias;
         var pass = req.query.pass;
 
-        for(var i= 0; i<users.length; i++)
-        {
-            if(users[i]['alias'] == alias)
-            {
+        for (var i = 0; i < users.length; i++) {
+            if (users[i]['alias'] == alias) {
 
-                console.log('user '+ users[i]['alias'] + ' found');
+                console.log('user ' + users[i]['alias'] + ' found');
 
-                if(users[i]['pass'] == pass)
-                {
+                if (users[i]['pass'] == pass) {
                     var token = Math.random();
                     users[i]['token'] = token;
 
@@ -96,8 +91,7 @@ app.get('/login', function (req, res) {
                         token: token
                     })
                 }
-                else
-                {
+                else {
                     console.log('wrong pass for user ' + alias);
                     res.status(200).json({
                         alias: alias,
@@ -110,7 +104,7 @@ app.get('/login', function (req, res) {
         }
 
         console.log('user ' + alias + ' not found');
-        res.status(204).json({
+        res.status(200).json({
             alias: alias,
             token: null
         })
@@ -118,28 +112,14 @@ app.get('/login', function (req, res) {
     });
 });
 
-function getUserPositionByToken(users, token) {
-
-    for (var i = 0; i<users.length; i++)
-    {
-        if(users[i]['token'] == token)
-        {
-            return i;
-        }
-    }
-
-    return -1;
-
-}
-
 
 app.get('/logout', function (req, res) {
-    fs.readFile( __dirname + "/data/" + "users.json", 'utf8', function (err, data) {
+    fs.readFile(__dirname + "/data/" + "users.json", 'utf8', function (err, data) {
         var users = JSON.parse(data);
         var token = req.query.token;
         var userPos = getUserPositionByToken(users, token);
 
-        if(userPos!=-1) {
+        if (userPos != -1) {
             users[userPos]['token'] = null;
 
             fs.writeFile(__dirname + "/data/" + "users.json", JSON.stringify(users), function (err) {
@@ -151,10 +131,9 @@ app.get('/logout', function (req, res) {
                 logout: 'success'
             })
         }
-        else
-        {
+        else {
             console.log('token injection detected');
-            res.status(204).json({
+            res.status(200).json({
                 alias: null,
                 logout: 'fail'
             })
@@ -163,6 +142,102 @@ app.get('/logout', function (req, res) {
 
     });
 });
+
+function getUserPositionByToken(users, token) {
+
+    //console.log(users.length)
+    for (var i = 0; i < users.length; i++) {
+        //console.log(users[i]['token'])
+        if (users[i]['token'] == token) {
+            return i;
+        }
+    }
+
+    return -1;
+
+}
+
+function getNumberOfAlbums() {
+
+    fs.readFile(__dirname + "/data/" + "albums.json", 'utf8', function (err, data) {
+        //console.log( data );
+        var json = JSON.parse(data);
+
+        //console.log(json.length)
+        return json.length;
+    });
+
+}
+
+app.get('/numberOfAlbums', function (req, res) {
+
+    var token = req.query.token;
+    var filesPath = ['/home/rofler/D/ua local/node/musicDB_backend/data/albums.json', '/home/rofler/D/ua local/node/musicDB_backend/data/users.json'];
+
+    async.map(filesPath, function(filePath, cb){ //reading files or dir
+        fs.readFile(filePath, 'utf8', cb);
+    }, function(err, results) {
+        var users = JSON.parse(results[1]);
+        var albums = JSON.parse(results[0]);
+
+        //console.log(users);
+        var userPos = getUserPositionByToken(users, token);
+        //console.log(token)
+
+        if(userPos!=null && userPos!=-1)
+        {
+            //console.log('jogos')
+            res.status(200).json({
+                totalAlbums: albums.length,
+                op: 'success'
+            });
+        }
+        else {
+            //console.log('jogos2131')
+            res.status(200).json({
+                totalAlbums: 0,
+                op: 'fail'
+            });
+        }
+    });
+
+});
+
+
+app.get('/addAlbum', function (req, res) {
+
+    var token = req.query.token;
+    var filesPath = ['/home/rofler/D/ua local/node/musicDB_backend/data/albums.json', '/home/rofler/D/ua local/node/musicDB_backend/data/users.json'];
+
+    async.map(filesPath, function(filePath, cb){ //reading files or dir
+        fs.readFile(filePath, 'utf8', cb);
+    }, function(err, results) {
+        var users = JSON.parse(results[1]);
+        var albums = JSON.parse(results[0]);
+
+        //console.log(users);
+        var userPos = getUserPositionByToken(users, token);
+        //console.log(token)
+
+        if(userPos!=null && userPos!=-1)
+        {
+            //console.log('jogos')
+            res.status(200).json({
+                totalAlbums: albums.length,
+                op: 'success'
+            });
+        }
+        else {
+            //console.log('jogos2131')
+            res.status(200).json({
+                totalAlbums: 0,
+                op: 'fail'
+            });
+        }
+    });
+
+});
+
 
 var server = app.listen(8081, function () {
 
@@ -174,12 +249,10 @@ var server = app.listen(8081, function () {
 });
 
 var minutes = 30, the_interval = minutes * 60 * 1000;
-setInterval(function() {
+setInterval(function () {
     console.log("I am doing my 6 seconds check");
     // do your stuff here
 }, the_interval);
-
-
 
 
 /********************* Break! beyond this point only web page stuff! ***********************/
@@ -191,23 +264,23 @@ var wepPage_router = wepPage_express.Router();
 var wepPage_path = __dirname + '/html/';
 wepPage_app2.use(wepPage_express.static(__dirname + '/html/'));
 
-wepPage_router.use(function (req,res,next) {
+wepPage_router.use(function (req, res, next) {
     console.log("/" + req.method);
     next();
 });
 
-wepPage_router.get("/",function(req,res){
+wepPage_router.get("/", function (req, res) {
     res.sendFile(wepPage_path + "index.html");
 });
 
-wepPage_app2.use("/",wepPage_router);
+wepPage_app2.use("/", wepPage_router);
 
 wepPage_app2.use(wepPage_express.static(__dirname));
 
-wepPage_app2.use("*",function(req,res){
+wepPage_app2.use("*", function (req, res) {
     res.sendFile(wepPage_path + "404.html");
 });
 
-wepPage_app2.listen(80,function(){
+wepPage_app2.listen(80, function () {
     console.log("Web page Live at Port 80");
 });
