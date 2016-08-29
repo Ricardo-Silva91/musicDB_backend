@@ -1,9 +1,16 @@
 /**
  * Created by rofler on 8/29/16.
  */
+
+var oldTitle;
+var oldArtist;
+var oldTrackTitle;
+var oldTrackNumber;
+var files;
+
 $(document).ready(function () {
 
-    var id=parent.document.URL.substring(parent.document.URL.indexOf('id='), parent.document.URL.length).split('=')[1].split('#')[0];
+    var id = parent.document.URL.substring(parent.document.URL.indexOf('id='), parent.document.URL.length).split('=')[1].split('#')[0];
 
     //alert('album ID: ' + id);
     $('#albumIdLabel')[0].innerText = id;
@@ -14,7 +21,7 @@ $(document).ready(function () {
     $('#inputComment')[0].value = albums[id]['comment'];
     $('#approved_checkbox')[0].checked = albums[id]['approved'];
 
-    if(imageExists(base_url_for_pics + albums[id]['pic_name'])) {
+    if (imageExists(base_url_for_pics + albums[id]['pic_name'])) {
         //alert('will load pic')
         $("#albumPicShow").attr("src", base_url_for_pics + albums[id]['pic_name']);
     }
@@ -25,12 +32,11 @@ $(document).ready(function () {
 
     var t = $('#tracksTable').DataTable();
 
-    for (var it = 0; it< albums[id]['tracks'].length; it++)
-    {
-        t.row.add( [
+    for (var it = 0; it < albums[id]['tracks'].length; it++) {
+        t.row.add([
             albums[id]['tracks'][it]['number'],
             albums[id]['tracks'][it]['title']
-        ] ).draw( false );
+        ]).draw(false);
     }
 
 
@@ -43,19 +49,35 @@ $(document).ready(function () {
     $('.ui-autocomplete').attr('style', "display: none; width: 251px; position: relative; top: -303px; left: 15px; cursor: pointer; z-index: 99;");
 
 
+    oldTitle = albums[id]['title'];
+    oldArtist = albums[id]['artist'];
+
+// Add events
+    $('input[type=file]#inputPic').on('change', prepareUpload);
+
+// Grab the files and set them to our variable
+    function prepareUpload(event) {
+        files = event.target.files;
+        alert('new file')
+    }
+
+
 });
 
-$('#tracksTable tbody').on( 'click', 'tr', function () {
+$('#tracksTable tbody').on('click', 'tr', function () {
 
     $('#edit_track_modal_track_number')[0].value = $(this).children()[0].innerText;
     $('#edit_track_modal_track_title')[0].value = $(this).children()[1].innerText;
+    oldTrackNumber = $(this).children()[0].innerText;
+    oldTrackTitle = $(this).children()[1].innerText;
+
 
     $('#edit_track_modal').modal();
     $('#edit_track_modal').modal('show');
     $(this).toggleClass('selected');
-} );
+});
 
-$('#add_track_btn').on( 'click', function () {
+$('#add_track_btn').on('click', function () {
 
     //$('#modal_track_number')[0].value = $(this).children()[0].innerText;
     //$('#modal_track_title')[0].value = $(this).children()[1].innerText;
@@ -63,11 +85,156 @@ $('#add_track_btn').on( 'click', function () {
     $('#add_track_modal').modal();
     $('#add_track_modal').modal('show');
     $(this).toggleClass('selected');
-} );
+});
 
-$("#edit_track_form").on('submit', function (e) {
+$("#edit_album_form").on('submit', function (e) {
+
+
+    e.preventDefault();
+
     //ajax call here
 
-    //stop form submission
+    var albumTitle = $('#inputTitle')[0].value;
+    var albumArtist = $('#inputArtist')[0].value;
+    var albumGenre = $('#inputGenre')[0].value;
+    var albumComment = $('#inputComment')[0].value;
+    var albumApproved = $('#approved_checkbox')[0].checked;
+    //alert(isSamples);
+
+    var cookie = getCookie('MusicDB_token');
+    var url_rest = base_url_rest + 'editAlbum';
+
+    //alert('edit album');
+
+    $.post(url_rest,
+        {
+            token: cookie,
+            albumArtist: albumArtist,
+            albumTitle: albumTitle,
+            albumGenre: albumGenre,
+            albumComment: albumComment,
+            albumApproved: albumApproved,
+            oldTitle: oldTitle,
+            oldArtist: oldArtist
+        },
+        function (data, status) {
+            var json = data;
+            if (json != null && json['op'] == 'success') {
+                //alert('logout successful');
+                //window.location.reload();
+            }
+            else {
+                alert('something is wrong:' + json['error']);
+                //window.location.href = "index.html";
+            }
+        });
+
+    if ($('input[type=file]#inputPic').val() != "") {
+        url_rest = base_url_rest + 'uploadPic';
+        alert('upload pic: ' + url_rest);
+        $.post(url_rest,
+            {
+                token: cookie,
+                albumArtist: albumArtist,
+                albumTitle: albumTitle,
+                albumPic: files[0]
+            },
+            function (data, status) {
+                alert(data);
+                var json = data;
+                if (json != null && json['op'] == 'success') {
+                    alert('logout successful');
+                    window.location.reload();
+                }
+                else {
+                    alert('something is wrong:' + json['error']);
+                    //window.location.href = "index.html";
+                }
+            });
+    }
+
+    window.location.reload();
+
+});
+
+
+
+$("#add_track_form").on('submit', function (e) {
+
     e.preventDefault();
+
+    //ajax call here
+
+    var trackTitle = $('#add_modal_track_title')[0].value;
+    var trackNumber = $('#add_modal_track_number')[0].value;
+    //alert(isSamples);
+
+    var cookie = getCookie('MusicDB_token');
+    var url_rest = base_url_rest + 'addTrack';
+
+    //alert('edit album');
+
+    $.post(url_rest,
+        {
+            token: cookie,
+            albumArtist: oldArtist,
+            albumTitle: oldTitle,
+            trackTitle: trackTitle,
+            trackNumber: trackNumber
+        },
+        function (data, status) {
+            var json = data;
+            if (json != null && json['op'] == 'success') {
+                //alert('logout successful');
+                window.location.reload();
+            }
+            else {
+                alert('something is wrong:' + json['error']);
+                //window.location.href = "index.html";
+            }
+        });
+
+
+
+});
+
+$("#edit_track_form").on('submit', function (e) {
+
+    e.preventDefault();
+
+    //ajax call here
+
+    var trackTitle = $('#edit_track_modal_track_title')[0].value;
+    var trackNumber = $('#edit_track_modal_track_number')[0].value;
+    //alert(isSamples);
+
+    var cookie = getCookie('MusicDB_token');
+    var url_rest = base_url_rest + 'editTrack';
+
+    //alert('edit album');
+
+    $.post(url_rest,
+        {
+            token: cookie,
+            albumArtist: oldArtist,
+            albumTitle: oldTitle,
+            trackTitle: trackTitle,
+            trackNumber: trackNumber,
+            oldTrackTitle: oldTrackTitle,
+            oldTrackNumber: oldTrackNumber
+        },
+        function (data, status) {
+            var json = data;
+            if (json != null && json['op'] == 'success') {
+                //alert('logout successful');
+                //window.location.reload();
+            }
+            else {
+                alert('something is wrong:' + json['error']);
+                //window.location.href = "index.html";
+            }
+        });
+
+    window.location.reload();
+
 });

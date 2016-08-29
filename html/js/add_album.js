@@ -4,7 +4,7 @@
 $(document).ready(function () {
 
 
-    $( "#inputArtist" ).autocomplete({
+    $("#inputArtist").autocomplete({
         source: artists
     });
 
@@ -26,26 +26,48 @@ $("#add_album_form").on('submit', function (e) {
     //alert(isSamples);
 
     var cookie = getCookie('MusicDB_token');
-    var url_rest = base_url_rest + 'addAlbum?token=' + cookie + '&albumArtist=' + albumArtist + '&albumTitle=' + albumTitle + '&sampled=' + isSamples;
-    // alert(url_rest)
-    //alert('b');
+    var url_rest = base_url_rest + 'addAlbum';
 
-    $.ajax({
-        url: url_rest
-    }).then(function(data) {
+    $.post(url_rest,
+        {
+            token: cookie,
+            albumArtist: albumArtist,
+            albumTitle: albumTitle,
+            sampled: isSamples
+        },
+        function (data, status) {
+            var json = data;
+            if (json != null && json['op'] == 'success') {
+                //alert('logout successful');
+                window.location.href = "home.html";
+            }
+            else {
+                alert('something is wrong:' + json['error']);
+                //window.location.href = "index.html";
+            }
+        });
 
-        var json = data;
-        if(json!= null && json['op'] == 'success') {
-            //alert('logout successful');
-            window.location.href = "home.html";
-        }
-        else {
-            alert('something is wrong:' + json['error']);
-            //window.location.href = "index.html";
-        }
+
+    /*
+     // alert(url_rest)
+     //alert('b');
+
+     $.ajax({
+     url: url_rest
+     }).then(function(data) {
+
+     var json = data;
+     if(json!= null && json['op'] == 'success') {
+     //alert('logout successful');
+     window.location.href = "home.html";
+     }
+     else {
+     alert('something is wrong:' + json['error']);
+     //window.location.href = "index.html";
+     }
 
 
-    });
+     });*/
 
     //window.location.href = "editAlbum.html?id=" + albumPos;
 

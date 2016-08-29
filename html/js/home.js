@@ -23,6 +23,9 @@ $(document).ready(function () {
         }
     });
 
+    $('#last-edited-album-title')[0].innerText = albums[albums.length-1]['title'];
+    $('#last-edited-album-artist')[0].innerText = albums[albums.length-1]['artist'];
+
     var elem = document.createElement('li');
     var elem_child1 = '<img src="" alt="User Image"><a class="users-list-name" href="#">Alexander Pierce</a><span class="users-list-date">Today</span>';//document.createElement('li');
 
@@ -36,5 +39,6 @@ $(document).ready(function () {
         elem.innerHTML = elem_child1;
         $('#new_albums_painting')[0].appendChild(elem);
     }
+
 
 });
