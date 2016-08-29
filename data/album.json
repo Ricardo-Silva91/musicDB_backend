@@ -1,14 +1,17 @@
 ﻿{
-    "title": "bestiary",
-    "artist": "hail mary mallon",
-    "tracks": [
-        {
-            "number": 1,
-            "title": "jonhattan"
-        },
-        {
-            "number": 2,
-            "title": "krill"
-        }
-    ]
+    "title":"Bestiary",
+    "artist":"Hail Mary Mallon",
+    "tracks":[
+        {"number":1,"title":"jonhattan"},
+        {"number":2,"title":"krill"},
+        {"number":4,"title":"Dollywood"},
+        {"number":10,"title":"Picture Day"},
+        {"number":11,"title":"Kiln"}
+    ],
+    "approved":true,
+    "genre":"Hip Hop",
+    "pic_name":"0.jpg",
+    "date_included":"8/1/2015",
+    "comment":"",
+    "id":0
 }

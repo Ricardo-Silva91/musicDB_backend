@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>MusicDB | Dashboard</title>
+    <title>MusicDB | All Albums</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.6 -->
@@ -130,17 +130,62 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Dashboard
+                All Albums
                 <small>Version 2.0</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li class="active">Dashboard</li>
+                <li class="active">All Albums</li>
             </ol>
         </section>
 
         <!-- Main content -->
         <section class="content">
+
+            <div class="row">
+                <!-- Left col -->
+                <div class="col-lg-12">
+                    <!-- /.box -->
+                    <div class="row">
+                        <!-- /.col -->
+
+                        <div class="col-lg-12">
+                            <!-- USERS LIST -->
+                            <div class="box box-danger">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">I Have No Thoughts</h3>
+
+                                    <div class="box-tools pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                                class="fa fa-minus"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i
+                                                class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body no-padding">
+                                    <ul id="new_albums_painting" class="users-list clearfix">
+
+                                    </ul>
+                                    <!-- /.users-list -->
+                                </div>
+                                <!-- /.box-footer -->
+                            </div>
+                            <!--/.box -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+
+                <!-- /.col -->
+            </div>
+
         </section>
         <!-- /.content -->
     </div>
@@ -377,7 +422,7 @@
 
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
-<script src="js/variables.js"></script>
 <script src="js/dash_common.js"></script>
+<script src="js/all_albums.js"></script>
 </body>
 </html>

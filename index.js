@@ -4,7 +4,19 @@ var app = express();
 var fs = require("fs");
 var async = require("async");
 
-var dir_path = __dirname + '/data/';
+var albums_path = __dirname + '/data/albums.json';
+var public_albums_path = __dirname + '/html/data/Public_albums.js';
+var artist_path = __dirname + '/data/artist_list.json';
+var public_artist_path= __dirname + '/html/data/Public_artist_list.js';
+var titles_path = __dirname + '/data/title_list.json';
+var public_titles_path = __dirname + '/html/data/Public_title_list.js';
+var log_path = __dirname + '/data/log.json';
+var public_log_path = __dirname + '/html/data/Public_log.js';
+
+var users_path = __dirname + '/data/users.json';
+
+var album_template = '{"title":"","artist":"","tracks":[],"approved":false,"genre":"","pic_name":"notAvailable.jpg","date_included":"","comment":"","id":-1}';
+var log_entry_template = '{"title":"Wax & Wane","what_happened":"Album Wax & Wane edited.","when_ih":"08/24/2016 01:08","type":-1}'
 
 
 app.use(function (req, res, next) {
@@ -157,57 +169,225 @@ function getUserPositionByToken(users, token) {
 
 }
 
-function getNumberOfAlbums() {
+function getAlbumPosition(albums, album_artist, album_title) {
 
-    fs.readFile(__dirname + "/data/" + "albums.json", 'utf8', function (err, data) {
-        //console.log( data );
-        var json = JSON.parse(data);
+    var res = -1;
 
-        //console.log(json.length)
-        return json.length;
-    });
+    if(album_artist != null && album_title != null)
+    {
+        for(var i=0; i<albums.length; i++)
+        {
+            if(albums[i]['artist'] == album_artist && albums[i]['title'] == album_title)
+            {
+                res = i;
+                break;
+            }
+        }
+    }
 
+    return res;
 }
 
-app.get('/numberOfAlbums', function (req, res) {
+
+function getCurrentDate()
+{
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+
+    var yyyy = today.getFullYear();
+    if(dd<10){
+        dd='0'+dd
+    }
+    if(mm<10){
+        mm='0'+mm
+    }
+    today = dd+'/'+mm+'/'+yyyy;
+    return today;
+}
+
+function getCurrentTime()
+{
+    var d = new Date();
+
+    return d.getHours() +':'+ d.getSeconds();
+}
+
+function artistExists(artists, albumArtist)
+{
+    var res = -1;
+
+    if(albumArtist != null)
+    {
+        for(var i=0; i<artists.length; i++)
+        {
+            if(artists[i]== albumArtist)
+            {
+                res = 1;
+                break;
+            }
+        }
+    }
+
+    return res;
+}
+
+function titleExists(titles, albumTitle)
+{
+    var res = -1;
+
+    if(albumTitle != null)
+    {
+        for(var i=0; i<titles.length; i++)
+        {
+            if(titles[i]== albumTitle)
+            {
+                res = 1;
+                break;
+            }
+        }
+    }
+
+    return res;
+}
+
+app.get('/addAlbum', function (req, res) {
+
+    console.log('add album: entered function');
 
     var token = req.query.token;
-    var filesPath = ['/home/rofler/D/ua local/node/musicDB_backend/data/albums.json', '/home/rofler/D/ua local/node/musicDB_backend/data/users.json'];
+    var albumArtist = req.query.albumArtist;
+    var albumTitle = req.query.albumTitle;
+    var sampled = req.query.sampled;
+    var filesPath = [albums_path, users_path, artist_path, titles_path, log_path];
 
     async.map(filesPath, function(filePath, cb){ //reading files or dir
         fs.readFile(filePath, 'utf8', cb);
     }, function(err, results) {
         var users = JSON.parse(results[1]);
         var albums = JSON.parse(results[0]);
+        var artists = JSON.parse(results[2]);
+        var titles = JSON.parse(results[3]);
+        var log = JSON.parse(results[4]);
 
         //console.log(users);
         var userPos = getUserPositionByToken(users, token);
         //console.log(token)
 
-        if(userPos!=null && userPos!=-1)
+        //if user exists
+        if(userPos!=null && userPos!=-1 && albumArtist!=null && albumTitle!=null && sampled!=null)
         {
-            //console.log('jogos')
-            res.status(200).json({
-                totalAlbums: albums.length,
-                op: 'success'
-            });
+            console.log('add album: user approved');
+            //check if album exists
+            var albumPos = getAlbumPosition(albums, albumArtist, albumTitle);
+
+            //album exists
+            if(albumPos != -1)
+            {
+                console.log('add album: album already exists');
+                res.status(200).json({
+                    op: 'fail',
+                    error:'album exists'
+                })
+            }
+            else {
+
+                console.log('add album: new album');
+                //must add album to json and write file
+                var newAlbum = JSON.parse(album_template);
+
+                //default values
+                newAlbum['id'] = albums.length;
+                newAlbum['title'] = albumTitle;
+                newAlbum['artist'] = albumArtist;
+                newAlbum['date_included'] = getCurrentDate();
+
+                if(sampled = true)
+                {
+                    newAlbum['genre'] = "samples"
+                }
+
+
+                albums[albums.length]= newAlbum;
+                fs.writeFile(albums_path, JSON.stringify(albums), function (err) {
+                    console.error(err)
+                });
+
+                fs.writeFile(public_albums_path, 'albums=' + JSON.stringify(albums), function (err) {
+                    console.error(err)
+                });
+
+                //update list files
+
+                //titles
+                if(titleExists(titles, albumTitle) == -1)
+                {
+                    titles[titles.length] = albumTitle;
+
+                    fs.writeFile(titles_path, JSON.stringify(titles), function (err) {
+                        console.error(err)
+                    });
+
+                    fs.writeFile(public_titles_path, 'titles=' + JSON.stringify(titles), function (err) {
+                        console.error(err)
+                    });
+                }
+
+                //artists
+                if(artistExists(artists, albumArtist) == -1)
+                {
+                    artists[artists.length] = albumTitle;
+
+                    fs.writeFile(artist_path, JSON.stringify(artists), function (err) {
+                        console.error(err)
+                    });
+
+                    fs.writeFile(public_artist_path, 'artists=' + JSON.stringify(artists), function (err) {
+                        console.error(err)
+                    });
+                }
+
+                //log
+                var log_entry = JSON.parse(album_template);
+
+                log_entry['title'] = albumTitle;
+                log_entry['what_happened'] = 'Album ' + albumTitle + ' added.';
+                log_entry['when_ih'] = newAlbum['date_included'] + ' ' + getCurrentTime();
+                log_entry['type'] = 1;
+
+                log[log.length] = log_entry;
+                fs.writeFile(log_path, JSON.stringify(log), function (err) {
+                    console.error(err)
+                });
+
+                fs.writeFile(public_log_path, 'log=' + JSON.stringify(log), function (err) {
+                    console.error(err)
+                });
+
+                res.status(200).json({
+                    op: 'success'
+                })
+            }
+
         }
+        //if not
         else {
-            //console.log('jogos2131')
+            console.log('add album: invalid token');
             res.status(200).json({
-                totalAlbums: 0,
-                op: 'fail'
-            });
+                op: 'fail',
+                error:'token not approved or missing parameters'
+            })
         }
     });
 
 });
 
 
-app.get('/addAlbum', function (req, res) {
+app.get('/numberOfAlbums', function (req, res) {
 
+    console.log('numberOfAlbums: entered')
     var token = req.query.token;
-    var filesPath = ['/home/rofler/D/ua local/node/musicDB_backend/data/albums.json', '/home/rofler/D/ua local/node/musicDB_backend/data/users.json'];
+    var filesPath = [albums_path, users_path];
 
     async.map(filesPath, function(filePath, cb){ //reading files or dir
         fs.readFile(filePath, 'utf8', cb);
@@ -262,6 +442,7 @@ var wepPage_express = require("express");
 var wepPage_app2 = wepPage_express();
 var wepPage_router = wepPage_express.Router();
 var wepPage_path = __dirname + '/html/';
+var wepPage_path_pics = __dirname + '/data/pics/';
 wepPage_app2.use(wepPage_express.static(__dirname + '/html/'));
 
 wepPage_router.use(function (req, res, next) {
@@ -271,6 +452,27 @@ wepPage_router.use(function (req, res, next) {
 
 wepPage_router.get("/", function (req, res) {
     res.sendFile(wepPage_path + "index.html");
+});
+
+wepPage_router.get("/getPicture", function (req, res) {
+
+
+
+    if(req.query.pic_name!=null && req.query.pic_name!='null') {
+        fs.exists(wepPage_path_pics + req.query.pic_name, function(exists) {
+            if (exists) {
+                console.log('getPicture: pic found');
+                res.sendFile(wepPage_path_pics + req.query.pic_name);
+            } else {
+                console.log('getPicture: pic non-existent');
+                res.sendFile(wepPage_path_pics + "notAvaliable.jpg");
+            }
+        });
+
+    }
+    else {
+        res.sendFile(wepPage_path_pics + "notAvaliable.jpg");
+    }
 });
 
 wepPage_app2.use("/", wepPage_router);
