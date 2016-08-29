@@ -7,6 +7,7 @@ var oldArtist;
 var oldTrackTitle;
 var oldTrackNumber;
 var files;
+var must_delete = false;
 
 $(document).ready(function () {
 
@@ -158,7 +159,6 @@ $("#edit_album_form").on('submit', function (e) {
 });
 
 
-
 $("#add_track_form").on('submit', function (e) {
 
     e.preventDefault();
@@ -195,7 +195,10 @@ $("#add_track_form").on('submit', function (e) {
         });
 
 
+});
 
+$('#edit_track_delete_btn').click(function () {
+    must_delete = true;
 });
 
 $("#edit_track_form").on('submit', function (e) {
@@ -203,38 +206,120 @@ $("#edit_track_form").on('submit', function (e) {
     e.preventDefault();
 
     //ajax call here
-
-    var trackTitle = $('#edit_track_modal_track_title')[0].value;
-    var trackNumber = $('#edit_track_modal_track_number')[0].value;
-    //alert(isSamples);
-
     var cookie = getCookie('MusicDB_token');
-    var url_rest = base_url_rest + 'editTrack';
 
-    //alert('edit album');
+    if (must_delete == false) {
+        var trackTitle = $('#edit_track_modal_track_title')[0].value;
+        var trackNumber = $('#edit_track_modal_track_number')[0].value;
+        //alert(isSamples);
 
-    $.post(url_rest,
-        {
-            token: cookie,
-            albumArtist: oldArtist,
-            albumTitle: oldTitle,
-            trackTitle: trackTitle,
-            trackNumber: trackNumber,
-            oldTrackTitle: oldTrackTitle,
-            oldTrackNumber: oldTrackNumber
-        },
-        function (data, status) {
-            var json = data;
-            if (json != null && json['op'] == 'success') {
-                //alert('logout successful');
-                //window.location.reload();
-            }
-            else {
-                alert('something is wrong:' + json['error']);
-                //window.location.href = "index.html";
-            }
-        });
+        var url_rest = base_url_rest + 'editTrack';
+
+        //alert('edit album');
+
+        $.post(url_rest,
+            {
+                token: cookie,
+                albumArtist: oldArtist,
+                albumTitle: oldTitle,
+                trackTitle: trackTitle,
+                trackNumber: trackNumber,
+                oldTrackTitle: oldTrackTitle,
+                oldTrackNumber: oldTrackNumber
+            },
+            function (data, status) {
+                var json = data;
+                if (json != null && json['op'] == 'success') {
+                    //alert('logout successful');
+                    //window.location.reload();
+                }
+                else {
+                    alert('something is wrong:' + json['error']);
+                    //window.location.href = "index.html";
+                }
+            });
+    }
+    else {
+        var url_rest = base_url_rest + 'deleteTrack';
+
+        //alert('edit album');
+
+        $.post(url_rest,
+            {
+                token: cookie,
+                albumArtist: oldArtist,
+                albumTitle: oldTitle,
+                oldTrackNumber: oldTrackNumber
+            },
+            function (data, status) {
+                var json = data;
+                if (json != null && json['op'] == 'success') {
+                    //alert('logout successful');
+                    //window.location.reload();
+                }
+                else {
+                    alert('something is wrong:' + json['error']);
+                    //window.location.href = "index.html";
+                }
+            });
+    }
+
 
     window.location.reload();
+
+});
+
+$("#upload_pic_form").on('submit', function (e) {
+
+
+    e.preventDefault();
+
+    //ajax call here
+
+    //var url_rest = base_url_rest + 'uploadPic';
+    var url_rest = base_url_rest + 'uploadPic_test';
+    alert('up pic');
+
+
+    $.ajax({
+        url: url_rest,
+        type: 'POST',
+        data: files[0],
+        processData: false,
+        contentType: false,
+        success: function(data){
+            console.log('upload successful!');
+        }
+    });
+
+/*    var albumTitle = oldTitle;
+    var albumArtist = oldArtist;
+
+
+    if ($('input[type=file]#inputPic').val() != "") {
+        url_rest = base_url_rest + 'uploadPic';
+        alert('upload pic: ' + url_rest);
+        $.post(url_rest,
+            {
+                token: cookie,
+                albumArtist: albumArtist,
+                albumTitle: albumTitle,
+                albumPic: files[0]
+            },
+            function (data, status) {
+                alert(data);
+                var json = data;
+                if (json != null && json['op'] == 'success') {
+                    alert('logout successful');
+                    window.location.reload();
+                }
+                else {
+                    alert('something is wrong:' + json['error']);
+                    //window.location.href = "index.html";
+                }
+            });
+    }
+
+    window.location.reload();*/
 
 });

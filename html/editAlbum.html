@@ -196,12 +196,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group" style="margin-right: 0px; margin-left: 0px">
-                                    <label for="inputPic">Upload Picture</label>
-                                    <input type="file" id="inputPic" accept=".jpg, .png">
-
-                                    <p class="help-block">Upload album cover pic.</p>
-                                </div>
                             </div>
                             <!-- /.box-body -->
                             <div class="box-footer">
@@ -210,7 +204,7 @@
                             <!-- /.box-footer -->
                         </form>
                     </div>
-                    <div class="box">
+                    <div class="box box-success">
                         <div class="box-header">
                             <h3 class="box-title">Track List:</h3>
                         </div>
@@ -256,6 +250,29 @@
                         <!-- /.box-body -->
                     </div>
 
+
+                    <div class="box box-danger">
+                        <div class="box-header">
+                            <h3 class="box-title">Cover:</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <form class="form-horizontal" id="upload_pic_form">
+                            <div class="box-body">
+                                <div class="form-group text-center center-block" style="margin-right: 0px; margin-left: 0px">
+                                    <label for="inputPic">Upload Picture</label>
+                                    <input class="btn-danger" style="margin: auto" type="file" id="inputPic" accept=".jpg, .png">
+
+                                    <p class="help-block">Upload album cover pic.</p>
+                                </div>
+                            </div>
+                            <div class="box-footer">
+                                <button type="submit" class="btn btn-info pull-right">Submit</button>
+                            </div>
+                        </form>
+
+
+                        <!-- /.box-body -->
+                    </div>
 
                 </div>
                 <div class="col-md-6">
@@ -522,17 +539,21 @@
                     <div class="modal-body">
                         <form role="form" id="edit_track_form">
                             <div class="form-group">
-                                <label for="edit_track_modal_track_number"><span class="glyphicon glyphicon-queen"></span> Track number</label>
+                                <label for="edit_track_modal_track_number"><span
+                                        class="glyphicon glyphicon-queen"></span> Track number</label>
                                 <input type="number" class="form-control" id="edit_track_modal_track_number">
                             </div>
                             <div class="form-group">
-                                <label for="edit_track_modal_track_title"><span class="glyphicon glyphicon-knight"></span> Track title</label>
+                                <label for="edit_track_modal_track_title"><span
+                                        class="glyphicon glyphicon-knight"></span> Track title</label>
                                 <input type="text" class="form-control" id="edit_track_modal_track_title">
                             </div>
-                            <button type="submit" id="edit_track_submit_btn" class="btn btn-default btn-success btn-block"><span
+                            <button type="submit" id="edit_track_submit_btn" value="edit_track"
+                                    class="btn btn-default btn-success btn-block"><span
                                     class="glyphicon glyphicon-off"></span> submit
                             </button>
-                            <button type="submit" id="edit_track_delete_btn" class="btn btn-default btn-danger btn-block"><span
+                            <button type="submit" id="edit_track_delete_btn" value="delete_track"
+                                    class="btn btn-default btn-danger btn-block"><span
                                     class="glyphicon glyphicon-off"></span> delete track
                             </button>
                         </form>
@@ -553,14 +574,17 @@
                     <div class="modal-body">
                         <form role="form" id="add_track_form">
                             <div class="form-group">
-                                <label for="add_modal_track_number"><span class="glyphicon glyphicon-queen"></span> Track number</label>
+                                <label for="add_modal_track_number"><span class="glyphicon glyphicon-queen"></span>
+                                    Track number</label>
                                 <input type="number" class="form-control" id="add_modal_track_number">
                             </div>
                             <div class="form-group">
-                                <label for="add_modal_track_title"><span class="glyphicon glyphicon-knight"></span> Track title</label>
+                                <label for="add_modal_track_title"><span class="glyphicon glyphicon-knight"></span>
+                                    Track title</label>
                                 <input type="text" class="form-control" id="add_modal_track_title">
                             </div>
-                            <button type="submit" id="add_track_submit_btn" class="btn btn-default btn-success btn-block"><span
+                            <button type="submit" id="add_track_submit_btn"
+                                    class="btn btn-default btn-success btn-block"><span
                                     class="glyphicon glyphicon-off"></span> submit
                             </button>
                         </form>

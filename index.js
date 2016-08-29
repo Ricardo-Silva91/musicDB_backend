@@ -166,6 +166,25 @@ function trackExists(tracks, trackNumber)
 }
 
 
+function deleteTrack_local(tracks, trackNumber)
+{
+    var res = [];
+
+    if(trackNumber != null)
+    {
+        for(var i=0; i<tracks.length; i++)
+        {
+            if(tracks[i]['number']!= trackNumber)
+            {
+                res[res.length] = tracks[i];
+            }
+        }
+    }
+
+    return res;
+}
+
+
 /**** GET METHODS ****/
 
 app.get('/listAlbums', function (req, res) {
@@ -810,6 +829,113 @@ app.post('/editTrack', function (req, res) {
 
 });
 
+app.post('/deleteTrack', function (req, res) {
+
+    console.log('delete track: entered function');
+
+    var token = req.body.token;
+    var albumArtist = req.body.albumArtist;
+    var albumTitle = req.body.albumTitle;
+    var oldTrackNumber = req.body.oldTrackNumber;
+
+
+    var filesPath = [albums_path, users_path, artist_path, titles_path, log_path];
+
+
+    async.map(filesPath, function(filePath, cb){ //reading files or dir
+        fs.readFile(filePath, 'utf8', cb);
+    }, function(err, results) {
+        var users = JSON.parse(results[1]);
+        var albums = JSON.parse(results[0]);
+        var artists = JSON.parse(results[2]);
+        var titles = JSON.parse(results[3]);
+        var log = JSON.parse(results[4]);
+
+        //console.log(users);
+        var userPos = getUserPositionByToken(users, token);
+        //console.log(token)
+
+        //if user exists
+        if(userPos!=null && userPos!=-1 && albumArtist!=null && albumTitle!=null)
+        {
+            console.log('delete track: user approved');
+            //check if album exists
+            console.log('delete track: will search for: ' + albumTitle + ' ' + albumArtist);
+            var albumPos = getAlbumPosition(albums, albumArtist, albumTitle);
+
+            //album exists
+            if(albumPos == -1)
+            {
+                console.log('delete track: album is non-existent');
+                res.status(200).json({
+                    op: 'fail',
+                    error:'album non-existent'
+                })
+            }
+            else {
+
+                console.log('delete track: album found. pos: ' + albumPos);
+                var trackPos = trackExists(albums[albumPos]['tracks'], oldTrackNumber);
+
+                if (trackPos != -1) {
+
+                    //must edit album in json and write file
+                    var newAlbum = albums[albumPos];
+                    newAlbum['tracks'] = deleteTrack_local(newAlbum['tracks'], oldTrackNumber);
+
+                    albums[albumPos] = newAlbum;
+                    fs.writeFile(albums_path, JSON.stringify(albums), function (err) {
+                        console.error(err)
+                    });
+
+                    fs.writeFile(public_albums_path, 'albums=' + JSON.stringify(albums), function (err) {
+                        console.error(err)
+                    });
+
+                    //log
+                    var log_entry = JSON.parse(album_template);
+
+                    log_entry['title'] = albumTitle;
+                    log_entry['what_happened'] = 'Album ' + albumTitle + ' edited.';
+                    log_entry['when_ih'] = newAlbum['date_included'] + ' ' + getCurrentTime();
+                    log_entry['type'] = 2;
+
+                    log[log.length] = log_entry;
+                    fs.writeFile(log_path, JSON.stringify(log), function (err) {
+                        console.error(err)
+                    });
+
+                    fs.writeFile(public_log_path, 'log=' + JSON.stringify(log), function (err) {
+                        console.error(err)
+                    });
+
+                    res.status(200).json({
+                        op: 'success'
+                    })
+                }
+
+                else
+                {
+                    console.log('delete track: track non-existent');
+                    res.status(200).json({
+                        op: 'fail',
+                        error:'track exists'
+                    })
+                }
+            }
+        }
+        //if not
+        else {
+            console.log('delete track: invalid token');
+            res.status(200).json({
+                op: 'fail',
+                error:'token not approved or missing parameters'
+            })
+        }
+    });
+
+});
+
 
 app.post('/uploadPic', function (req, res) {
 
@@ -909,6 +1035,8 @@ app.post('/uploadPic', function (req, res) {
     });
 
 });
+
+
 
 
 
