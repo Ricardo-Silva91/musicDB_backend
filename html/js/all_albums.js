@@ -18,4 +18,25 @@ $(document).ready(function () {
         $('#new_albums_painting')[0].appendChild(elem);
     }
 
+
+    var t = $('#albumsTable').DataTable();
+
+    for (var it = 0; it< albums.length; it++)
+    {
+        t.row.add( [
+            albums[it]['id'],
+            albums[it]['title'],
+            albums[it]['artist'],
+            albums[it]['date_included'],
+        ] ).draw( false );
+    }
+
+
 });
+
+$('#albumsTable tbody').on( 'click', 'tr', function () {
+
+
+    window.location.href = "editAlbum.html?id=" + $(this).children()[0].innerText;
+
+} );

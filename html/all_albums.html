@@ -20,6 +20,8 @@
          folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
 
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -171,6 +173,92 @@
                                     </ul>
                                     <!-- /.users-list -->
                                 </div>
+                                <!-- /.box-footer -->
+                            </div>
+                            <!--/.box -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
+
+                <!-- /.col -->
+            </div>
+
+
+            <div class="row">
+                <!-- Left col -->
+                <div class="col-lg-12">
+                    <!-- /.box -->
+                    <div class="row">
+                        <!-- /.col -->
+
+                        <div class="col-lg-12">
+                            <!-- USERS LIST -->
+                            <div class="box box-success">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">I Have No Pics</h3>
+
+                                    <div class="box-tools pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                                class="fa fa-minus"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i
+                                                class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                                        <div class="row">
+                                            <div class="col-sm-6"></div>
+                                            <div class="col-sm-6"></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <table id="albumsTable" class="table table-bordered table-hover dataTable"
+                                                       role="grid" aria-describedby="example2_info">
+                                                    <thead>
+                                                    <tr role="row">
+                                                        <th class="sorting_asc" style="width: 1%;" tabindex="0"
+                                                            aria-controls="albumsTable"
+                                                            rowspan="1" colspan="1" aria-sort="ascending"
+                                                            aria-label="Rendering engine: activate to sort column descending">
+                                                            #
+                                                        </th>
+                                                        <th class="sorting" tabindex="0" aria-controls="albumsTable" rowspan="1"
+                                                            colspan="1" aria-label="Browser: activate to sort column ascending">
+                                                            Title
+                                                        </th>
+                                                        <th class="sorting_asc"  tabindex="0"
+                                                            aria-controls="albumsTable"
+                                                            rowspan="1" colspan="1" aria-sort="ascending"
+                                                            aria-label="Rendering engine: activate to sort column descending">
+                                                            Artist
+                                                        </th>
+                                                        <th class="sorting" tabindex="0" style="width: 1%;" aria-controls="albumsTable" rowspan="1"
+                                                            colspan="1" aria-label="Browser: activate to sort column ascending">
+                                                            Date Included
+                                                        </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                    <tfoot>
+                                                    </tfoot>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
                                 <!-- /.box-footer -->
                             </div>
                             <!--/.box -->
@@ -414,6 +502,9 @@
 <script src="plugins/slimScroll/jquery.slimscroll.min.js"></script>
 <!-- ChartJS 1.0.1 -->
 <script src="plugins/chartjs/Chart.min.js"></script>
+
+<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+
 
 <script src="data/Public_albums.js"></script>
 <script src="data/Public_artist_list.js"></script>

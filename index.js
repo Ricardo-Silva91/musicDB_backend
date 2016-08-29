@@ -435,6 +435,7 @@ setInterval(function () {
 }, the_interval);
 
 
+
 /********************* Break! beyond this point only web page stuff! ***********************/
 
 
@@ -453,6 +454,7 @@ wepPage_router.use(function (req, res, next) {
 wepPage_router.get("/", function (req, res) {
     res.sendFile(wepPage_path + "index.html");
 });
+
 
 wepPage_router.get("/getPicture", function (req, res) {
 
