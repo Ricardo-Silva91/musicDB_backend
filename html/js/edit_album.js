@@ -59,7 +59,7 @@ $(document).ready(function () {
 // Grab the files and set them to our variable
     function prepareUpload(event) {
         files = event.target.files;
-        alert('new file')
+        //alert('new file')
     }
 
 
@@ -277,34 +277,33 @@ $("#upload_pic_form").on('submit', function (e) {
     //ajax call here
 
     //var url_rest = base_url_rest + 'uploadPic';
-    var url_rest = base_url_rest + 'uploadPic_test';
-    alert('up pic');
+    var cookie = getCookie('MusicDB_token');
 
-
-    $.ajax({
-        url: url_rest,
-        type: 'POST',
-        data: files[0],
-        processData: false,
-        contentType: false,
-        success: function(data){
-            console.log('upload successful!');
-        }
-    });
-
-/*    var albumTitle = oldTitle;
+    /*
+     $.ajax({
+     url: url_rest,
+     type: 'POST',
+     data: files[0],
+     processData: false,
+     contentType: false,
+     success: function(data){
+     console.log('upload successful!');
+     }
+     });
+     */
+    var albumTitle = oldTitle;
     var albumArtist = oldArtist;
 
 
     if ($('input[type=file]#inputPic').val() != "") {
-        url_rest = base_url_rest + 'uploadPic';
+        url_rest = base_url_rest + 'uploadPic_template';
         alert('upload pic: ' + url_rest);
-        $.post(url_rest,
+     /*   $.post(url_rest,
             {
                 token: cookie,
                 albumArtist: albumArtist,
                 albumTitle: albumTitle,
-                albumPic: files[0]
+                avatar: files[0]
             },
             function (data, status) {
                 alert(data);
@@ -318,8 +317,33 @@ $("#upload_pic_form").on('submit', function (e) {
                     //window.location.href = "index.html";
                 }
             });
+            */
+        var formData = new FormData();
+        formData.append('token', cookie);
+        formData.append('albumArtist', albumArtist);
+        formData.append('albumTitle', albumTitle);
+        formData.append('avatar', $('input[type=file]')[0].files[0]);
+
+        $.ajax({
+            type: 'POST',
+            url: url_rest,
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(data){
+                alert(data);
+            },
+            error: function(jqXHR, textStatus, errorThrown)
+            {
+                // Handle errors here
+                console.log('ERRORS: ' + textStatus);
+                // STOP LOADING SPINNER
+            }
+        });
+
     }
 
-    window.location.reload();*/
+    //window.location.reload();
 
 });

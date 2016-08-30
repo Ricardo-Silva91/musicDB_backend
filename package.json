@@ -29,6 +29,7 @@
     "express": "^4.14.0",
     "fs": "0.0.1-security",
     "http": "0.0.0",
-    "jsonfile": "^2.3.1"
+    "jsonfile": "^2.3.1",
+    "multer": "^1.2.0"
   }
 }

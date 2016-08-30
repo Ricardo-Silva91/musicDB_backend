@@ -1,13 +1,105 @@
+/*** Requirements ****/
 var http = require('http');
 var express = require('express');
 var app = express();
 var fs = require("fs");
 var async = require("async");
 
+var multer = require('multer');
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'data/pics/')
+    },
+    filename: function (req, file, cb) {
+        var token = req.body.token;
+        var albumArtist = req.body.albumArtist;
+        var albumTitle = req.body.albumTitle;
+
+        console.log('upload pic: ' + token + ' ' + albumTitle + ' ' + albumArtist)
+
+        var filesPath = [albums_path, users_path, artist_path, titles_path, log_path];
+
+        async.map(filesPath, function (filePath, cb) { //reading files or dir
+            fs.readFile(filePath, 'utf8', cb);
+        }, function (err, results) {
+            var users = JSON.parse(results[1]);
+            var albums = JSON.parse(results[0]);
+            var log = JSON.parse(results[4]);
+
+            //console.log(users);
+            var userPos = getUserPositionByToken(users, token);
+            //console.log(token)
+
+            //if user exists
+            if (userPos != null && userPos != -1 && albumArtist != null && albumTitle != null) {
+                console.log('upload Pic: user approved');
+                //check if album exists
+                console.log('upload pic: will search for: ' + albumArtist + ' ' + albumTitle);
+                var albumPos = getAlbumPosition(albums, albumTitle, albumArtist);
+
+                //album exists
+                if (albumPos == -1) {
+                    console.log('upload Pic: album is non-existent');
+                    cb(null, 'trash.trash');
+
+                }
+                else {
+                    //must write file
+                    console.log('upload Pic: album found. pos: ' + albumPos);
+                    albums[albumPos]['pic_name'] = albumPos + '.jpg';
+
+                    console.log(JSON.stringify(albums[albumPos]));
+
+                    fs.writeFile(albums_path, JSON.stringify(albums), function (err) {
+                        console.error(err)
+                    });
+
+                    fs.writeFile(public_albums_path, 'albums=' + JSON.stringify(albums), function (err) {
+                        console.error(err)
+                    });
+
+                    //update list files
+
+
+                    //log
+                    var log_entry = JSON.parse(album_template);
+
+                    log_entry['title'] = albumTitle;
+                    log_entry['what_happened'] = 'Album ' + albumTitle + ' edited.';
+                    log_entry['when_ih'] = getCurrentDate() + ' ' + getCurrentTime();
+                    log_entry['type'] = 2;
+
+                    log[log.length] = log_entry;
+                    fs.writeFile(log_path, JSON.stringify(log), function (err) {
+                        console.error(err)
+                    });
+
+                    fs.writeFile(public_log_path, 'log=' + JSON.stringify(log), function (err) {
+                        console.error(err)
+                    });
+
+                    cb(null, albumPos + '.jpg');
+                }
+
+            }
+            //if not
+            else {
+                console.log('upload Pic: invalid token');
+                cb(null, 'trash.trash');
+            }
+        });
+
+
+    }
+});
+
+var upload = multer({storage: storage});
+
+/****Final Variables & Templates****/
 var albums_path = __dirname + '/data/albums.json';
 var public_albums_path = __dirname + '/html/data/Public_albums.js';
 var artist_path = __dirname + '/data/artist_list.json';
-var public_artist_path= __dirname + '/html/data/Public_artist_list.js';
+var public_artist_path = __dirname + '/html/data/Public_artist_list.js';
 var titles_path = __dirname + '/data/title_list.json';
 var public_titles_path = __dirname + '/html/data/Public_title_list.js';
 var log_path = __dirname + '/data/log.json';
@@ -20,6 +112,8 @@ var album_template = '{"title":"","artist":"","tracks":[],"approved":false,"genr
 var log_entry_template = '{"title":"Wax & Wane","what_happened":"Album Wax & Wane edited.","when_ih":"08/24/2016 01:08","type":-1}'
 var track_template = '{"number":-1,"title":""}';
 
+
+/**** Initial Things *****/
 
 app.use(function (req, res, next) {
     // Website you wish to allow to connect
@@ -68,12 +162,9 @@ function getAlbumPosition(albums, album_artist, album_title) {
 
     var res = -1;
 
-    if(album_artist != null && album_title != null)
-    {
-        for(var i=0; i<albums.length; i++)
-        {
-            if(albums[i]['artist'] == album_artist && albums[i]['title'] == album_title)
-            {
+    if (album_artist != null && album_title != null) {
+        for (var i = 0; i < albums.length; i++) {
+            if (albums[i]['artist'] == album_artist && albums[i]['title'] == album_title) {
                 res = i;
                 break;
             }
@@ -84,40 +175,34 @@ function getAlbumPosition(albums, album_artist, album_title) {
 }
 
 
-function getCurrentDate()
-{
+function getCurrentDate() {
     var today = new Date();
     var dd = today.getDate();
-    var mm = today.getMonth()+1; //January is 0!
+    var mm = today.getMonth() + 1; //January is 0!
 
     var yyyy = today.getFullYear();
-    if(dd<10){
-        dd='0'+dd
+    if (dd < 10) {
+        dd = '0' + dd
     }
-    if(mm<10){
-        mm='0'+mm
+    if (mm < 10) {
+        mm = '0' + mm
     }
-    today = dd+'/'+mm+'/'+yyyy;
+    today = dd + '/' + mm + '/' + yyyy;
     return today;
 }
 
-function getCurrentTime()
-{
+function getCurrentTime() {
     var d = new Date();
 
-    return d.getHours() +':'+ d.getSeconds();
+    return d.getHours() + ':' + d.getSeconds();
 }
 
-function artistExists(artists, albumArtist)
-{
+function artistExists(artists, albumArtist) {
     var res = -1;
 
-    if(albumArtist != null)
-    {
-        for(var i=0; i<artists.length; i++)
-        {
-            if(artists[i]== albumArtist)
-            {
+    if (albumArtist != null) {
+        for (var i = 0; i < artists.length; i++) {
+            if (artists[i] == albumArtist) {
                 res = 1;
                 break;
             }
@@ -127,16 +212,12 @@ function artistExists(artists, albumArtist)
     return res;
 }
 
-function titleExists(titles, albumTitle)
-{
+function titleExists(titles, albumTitle) {
     var res = -1;
 
-    if(albumTitle != null)
-    {
-        for(var i=0; i<titles.length; i++)
-        {
-            if(titles[i]== albumTitle)
-            {
+    if (albumTitle != null) {
+        for (var i = 0; i < titles.length; i++) {
+            if (titles[i] == albumTitle) {
                 res = 1;
                 break;
             }
@@ -146,16 +227,12 @@ function titleExists(titles, albumTitle)
     return res;
 }
 
-function trackExists(tracks, trackNumber)
-{
+function trackExists(tracks, trackNumber) {
     var res = -1;
 
-    if(trackNumber != null)
-    {
-        for(var i=0; i<tracks.length; i++)
-        {
-            if(tracks[i]['number']== trackNumber)
-            {
+    if (trackNumber != null) {
+        for (var i = 0; i < tracks.length; i++) {
+            if (tracks[i]['number'] == trackNumber) {
                 res = i;
                 break;
             }
@@ -166,16 +243,12 @@ function trackExists(tracks, trackNumber)
 }
 
 
-function deleteTrack_local(tracks, trackNumber)
-{
+function deleteTrack_local(tracks, trackNumber) {
     var res = [];
 
-    if(trackNumber != null)
-    {
-        for(var i=0; i<tracks.length; i++)
-        {
-            if(tracks[i]['number']!= trackNumber)
-            {
+    if (trackNumber != null) {
+        for (var i = 0; i < tracks.length; i++) {
+            if (tracks[i]['number'] != trackNumber) {
                 res[res.length] = tracks[i];
             }
         }
@@ -301,9 +374,9 @@ app.get('/numberOfAlbums', function (req, res) {
     var token = req.query.token;
     var filesPath = [albums_path, users_path];
 
-    async.map(filesPath, function(filePath, cb){ //reading files or dir
+    async.map(filesPath, function (filePath, cb) { //reading files or dir
         fs.readFile(filePath, 'utf8', cb);
-    }, function(err, results) {
+    }, function (err, results) {
         var users = JSON.parse(results[1]);
         var albums = JSON.parse(results[0]);
 
@@ -311,8 +384,7 @@ app.get('/numberOfAlbums', function (req, res) {
         var userPos = getUserPositionByToken(users, token);
         //console.log(token)
 
-        if(userPos!=null && userPos!=-1)
-        {
+        if (userPos != null && userPos != -1) {
             //console.log('jogos')
             res.status(200).json({
                 totalAlbums: albums.length,
@@ -345,9 +417,9 @@ app.post('/addAlbum', function (req, res) {
 
     var filesPath = [albums_path, users_path, artist_path, titles_path, log_path];
 
-    async.map(filesPath, function(filePath, cb){ //reading files or dir
+    async.map(filesPath, function (filePath, cb) { //reading files or dir
         fs.readFile(filePath, 'utf8', cb);
-    }, function(err, results) {
+    }, function (err, results) {
         var users = JSON.parse(results[1]);
         var albums = JSON.parse(results[0]);
         var artists = JSON.parse(results[2]);
@@ -359,19 +431,17 @@ app.post('/addAlbum', function (req, res) {
         //console.log(token)
 
         //if user exists
-        if(userPos!=null && userPos!=-1 && albumArtist!=null && albumTitle!=null && sampled!=null)
-        {
+        if (userPos != null && userPos != -1 && albumArtist != null && albumTitle != null && sampled != null) {
             console.log('add album: user approved');
             //check if album exists
             var albumPos = getAlbumPosition(albums, albumArtist, albumTitle);
 
             //album exists
-            if(albumPos != -1)
-            {
+            if (albumPos != -1) {
                 console.log('add album: album already exists');
                 res.status(200).json({
                     op: 'fail',
-                    error:'album exists'
+                    error: 'album exists'
                 })
             }
             else {
@@ -386,13 +456,12 @@ app.post('/addAlbum', function (req, res) {
                 newAlbum['artist'] = albumArtist;
                 newAlbum['date_included'] = getCurrentDate();
 
-                if(sampled = true)
-                {
+                if (sampled = true) {
                     newAlbum['genre'] = "samples"
                 }
 
 
-                albums[albums.length]= newAlbum;
+                albums[albums.length] = newAlbum;
                 fs.writeFile(albums_path, JSON.stringify(albums), function (err) {
                     console.error(err)
                 });
@@ -404,8 +473,7 @@ app.post('/addAlbum', function (req, res) {
                 //update list files
 
                 //titles
-                if(titleExists(titles, albumTitle) == -1)
-                {
+                if (titleExists(titles, albumTitle) == -1) {
                     titles[titles.length] = albumTitle;
 
                     fs.writeFile(titles_path, JSON.stringify(titles), function (err) {
@@ -418,8 +486,7 @@ app.post('/addAlbum', function (req, res) {
                 }
 
                 //artists
-                if(artistExists(artists, albumArtist) == -1)
-                {
+                if (artistExists(artists, albumArtist) == -1) {
                     artists[artists.length] = albumTitle;
 
                     fs.writeFile(artist_path, JSON.stringify(artists), function (err) {
@@ -436,7 +503,7 @@ app.post('/addAlbum', function (req, res) {
 
                 log_entry['title'] = albumTitle;
                 log_entry['what_happened'] = 'Album ' + albumTitle + ' added.';
-                log_entry['when_ih'] = newAlbum['date_included'] + ' ' + getCurrentTime();
+                log_entry['when_ih'] = getCurrentDate() + ' ' + getCurrentTime();
                 log_entry['type'] = 1;
 
                 log[log.length] = log_entry;
@@ -459,7 +526,7 @@ app.post('/addAlbum', function (req, res) {
             console.log('add album: invalid token');
             res.status(200).json({
                 op: 'fail',
-                error:'token not approved or missing parameters'
+                error: 'token not approved or missing parameters'
             })
         }
     });
@@ -484,9 +551,9 @@ app.post('/editAlbum', function (req, res) {
 
     console.log('received: ' + token + ' ' + albumArtist + ' ' + albumTitle + ' ' + albumGenre + ' ' + albumComment + ' ' + albumApproved + ' ');
 
-    async.map(filesPath, function(filePath, cb){ //reading files or dir
+    async.map(filesPath, function (filePath, cb) { //reading files or dir
         fs.readFile(filePath, 'utf8', cb);
-    }, function(err, results) {
+    }, function (err, results) {
         var users = JSON.parse(results[1]);
         var albums = JSON.parse(results[0]);
         var artists = JSON.parse(results[2]);
@@ -498,20 +565,18 @@ app.post('/editAlbum', function (req, res) {
         //console.log(token)
 
         //if user exists
-        if(userPos!=null && userPos!=-1 && albumArtist!=null && albumTitle!=null && albumGenre!=null && albumComment!=null && albumApproved!=null)
-        {
+        if (userPos != null && userPos != -1 && albumArtist != null && albumTitle != null && albumGenre != null && albumComment != null && albumApproved != null) {
             console.log('edit album: user approved');
             //check if album exists
             console.log('edit album: will search for: ' + oldTitle + ' ' + oldArtist);
             var albumPos = getAlbumPosition(albums, oldArtist, oldTitle);
 
             //album exists
-            if(albumPos == -1)
-            {
+            if (albumPos == -1) {
                 console.log('edit album: album is non-existent');
                 res.status(200).json({
                     op: 'fail',
-                    error:'album non-existent'
+                    error: 'album non-existent'
                 })
             }
             else {
@@ -527,7 +592,7 @@ app.post('/editAlbum', function (req, res) {
                 newAlbum['comment'] = albumComment;
                 newAlbum['approved'] = albumApproved;
 
-                albums[albumPos]= newAlbum;
+                albums[albumPos] = newAlbum;
                 fs.writeFile(albums_path, JSON.stringify(albums), function (err) {
                     console.error(err)
                 });
@@ -539,8 +604,7 @@ app.post('/editAlbum', function (req, res) {
                 //update list files
 
                 //titles
-                if(titleExists(titles, albumTitle) == -1)
-                {
+                if (titleExists(titles, albumTitle) == -1) {
                     titles[titles.length] = albumTitle;
 
                     fs.writeFile(titles_path, JSON.stringify(titles), function (err) {
@@ -553,8 +617,7 @@ app.post('/editAlbum', function (req, res) {
                 }
 
                 //artists
-                if(artistExists(artists, albumArtist) == -1)
-                {
+                if (artistExists(artists, albumArtist) == -1) {
                     artists[artists.length] = albumTitle;
 
                     fs.writeFile(artist_path, JSON.stringify(artists), function (err) {
@@ -571,7 +634,7 @@ app.post('/editAlbum', function (req, res) {
 
                 log_entry['title'] = albumTitle;
                 log_entry['what_happened'] = 'Album ' + albumTitle + ' edited.';
-                log_entry['when_ih'] = newAlbum['date_included'] + ' ' + getCurrentTime();
+                log_entry['when_ih'] = getCurrentDate() + ' ' + getCurrentTime();
                 log_entry['type'] = 2;
 
                 log[log.length] = log_entry;
@@ -594,7 +657,7 @@ app.post('/editAlbum', function (req, res) {
             console.log('edit album: invalid token');
             res.status(200).json({
                 op: 'fail',
-                error:'token not approved or missing parameters'
+                error: 'token not approved or missing parameters'
             })
         }
     });
@@ -616,9 +679,9 @@ app.post('/addTrack', function (req, res) {
     var filesPath = [albums_path, users_path, artist_path, titles_path, log_path];
 
 
-    async.map(filesPath, function(filePath, cb){ //reading files or dir
+    async.map(filesPath, function (filePath, cb) { //reading files or dir
         fs.readFile(filePath, 'utf8', cb);
-    }, function(err, results) {
+    }, function (err, results) {
         var users = JSON.parse(results[1]);
         var albums = JSON.parse(results[0]);
         var artists = JSON.parse(results[2]);
@@ -630,20 +693,18 @@ app.post('/addTrack', function (req, res) {
         //console.log(token)
 
         //if user exists
-        if(userPos!=null && userPos!=-1 && albumArtist!=null && albumTitle!=null && trackNumber!=null && trackTitle!=null)
-        {
+        if (userPos != null && userPos != -1 && albumArtist != null && albumTitle != null && trackNumber != null && trackTitle != null) {
             console.log('add track: user approved');
             //check if album exists
             console.log('add track: will search for: ' + albumTitle + ' ' + albumArtist);
             var albumPos = getAlbumPosition(albums, albumArtist, albumTitle);
 
             //album exists
-            if(albumPos == -1)
-            {
+            if (albumPos == -1) {
                 console.log('add track: album is non-existent');
                 res.status(200).json({
                     op: 'fail',
-                    error:'album non-existent'
+                    error: 'album non-existent'
                 })
             }
             else {
@@ -675,7 +736,7 @@ app.post('/addTrack', function (req, res) {
 
                     log_entry['title'] = albumTitle;
                     log_entry['what_happened'] = 'Track added to ' + albumTitle;
-                    log_entry['when_ih'] = newAlbum['date_included'] + ' ' + getCurrentTime();
+                    log_entry['when_ih'] = getCurrentDate() + ' ' + getCurrentTime();
                     log_entry['type'] = 3;
 
                     log[log.length] = log_entry;
@@ -692,12 +753,11 @@ app.post('/addTrack', function (req, res) {
                     })
                 }
 
-                else
-                {
+                else {
                     console.log('add track: track exists');
                     res.status(200).json({
                         op: 'fail',
-                        error:'track exists'
+                        error: 'track exists'
                     })
                 }
             }
@@ -707,7 +767,7 @@ app.post('/addTrack', function (req, res) {
             console.log('add track: invalid token');
             res.status(200).json({
                 op: 'fail',
-                error:'token not approved or missing parameters'
+                error: 'token not approved or missing parameters'
             })
         }
     });
@@ -730,9 +790,9 @@ app.post('/editTrack', function (req, res) {
     var filesPath = [albums_path, users_path, artist_path, titles_path, log_path];
 
 
-    async.map(filesPath, function(filePath, cb){ //reading files or dir
+    async.map(filesPath, function (filePath, cb) { //reading files or dir
         fs.readFile(filePath, 'utf8', cb);
-    }, function(err, results) {
+    }, function (err, results) {
         var users = JSON.parse(results[1]);
         var albums = JSON.parse(results[0]);
         var artists = JSON.parse(results[2]);
@@ -744,20 +804,18 @@ app.post('/editTrack', function (req, res) {
         //console.log(token)
 
         //if user exists
-        if(userPos!=null && userPos!=-1 && albumArtist!=null && albumTitle!=null && trackNumber!=null && trackTitle!=null)
-        {
+        if (userPos != null && userPos != -1 && albumArtist != null && albumTitle != null && trackNumber != null && trackTitle != null) {
             console.log('edit track: user approved');
             //check if album exists
             console.log('edit track: will search for: ' + albumTitle + ' ' + albumArtist);
             var albumPos = getAlbumPosition(albums, albumArtist, albumTitle);
 
             //album exists
-            if(albumPos == -1)
-            {
+            if (albumPos == -1) {
                 console.log('edit track: album is non-existent');
                 res.status(200).json({
                     op: 'fail',
-                    error:'album non-existent'
+                    error: 'album non-existent'
                 })
             }
             else {
@@ -790,7 +848,7 @@ app.post('/editTrack', function (req, res) {
 
                     log_entry['title'] = albumTitle;
                     log_entry['what_happened'] = 'Album ' + albumTitle + ' edited.';
-                    log_entry['when_ih'] = newAlbum['date_included'] + ' ' + getCurrentTime();
+                    log_entry['when_ih'] = getCurrentDate() + ' ' + getCurrentTime();
                     log_entry['type'] = 2;
 
                     log[log.length] = log_entry;
@@ -807,12 +865,11 @@ app.post('/editTrack', function (req, res) {
                     })
                 }
 
-                else
-                {
+                else {
                     console.log('edit track: track non-existent');
                     res.status(200).json({
                         op: 'fail',
-                        error:'track exists'
+                        error: 'track exists'
                     })
                 }
             }
@@ -822,7 +879,7 @@ app.post('/editTrack', function (req, res) {
             console.log('edit track: invalid token');
             res.status(200).json({
                 op: 'fail',
-                error:'token not approved or missing parameters'
+                error: 'token not approved or missing parameters'
             })
         }
     });
@@ -842,9 +899,9 @@ app.post('/deleteTrack', function (req, res) {
     var filesPath = [albums_path, users_path, artist_path, titles_path, log_path];
 
 
-    async.map(filesPath, function(filePath, cb){ //reading files or dir
+    async.map(filesPath, function (filePath, cb) { //reading files or dir
         fs.readFile(filePath, 'utf8', cb);
-    }, function(err, results) {
+    }, function (err, results) {
         var users = JSON.parse(results[1]);
         var albums = JSON.parse(results[0]);
         var artists = JSON.parse(results[2]);
@@ -856,20 +913,18 @@ app.post('/deleteTrack', function (req, res) {
         //console.log(token)
 
         //if user exists
-        if(userPos!=null && userPos!=-1 && albumArtist!=null && albumTitle!=null)
-        {
+        if (userPos != null && userPos != -1 && albumArtist != null && albumTitle != null) {
             console.log('delete track: user approved');
             //check if album exists
             console.log('delete track: will search for: ' + albumTitle + ' ' + albumArtist);
             var albumPos = getAlbumPosition(albums, albumArtist, albumTitle);
 
             //album exists
-            if(albumPos == -1)
-            {
+            if (albumPos == -1) {
                 console.log('delete track: album is non-existent');
                 res.status(200).json({
                     op: 'fail',
-                    error:'album non-existent'
+                    error: 'album non-existent'
                 })
             }
             else {
@@ -897,7 +952,7 @@ app.post('/deleteTrack', function (req, res) {
 
                     log_entry['title'] = albumTitle;
                     log_entry['what_happened'] = 'Album ' + albumTitle + ' edited.';
-                    log_entry['when_ih'] = newAlbum['date_included'] + ' ' + getCurrentTime();
+                    log_entry['when_ih'] = getCurrentDate() + ' ' + getCurrentTime();
                     log_entry['type'] = 2;
 
                     log[log.length] = log_entry;
@@ -914,12 +969,11 @@ app.post('/deleteTrack', function (req, res) {
                     })
                 }
 
-                else
-                {
+                else {
                     console.log('delete track: track non-existent');
                     res.status(200).json({
                         op: 'fail',
-                        error:'track exists'
+                        error: 'track exists'
                     })
                 }
             }
@@ -929,115 +983,41 @@ app.post('/deleteTrack', function (req, res) {
             console.log('delete track: invalid token');
             res.status(200).json({
                 op: 'fail',
-                error:'token not approved or missing parameters'
+                error: 'token not approved or missing parameters'
             })
         }
     });
 
 });
 
+app.post('/uploadPic_template', upload.single('avatar'), function (req, res, next) {
+    // req.file is the `avatar` file
+    // req.body will hold the text fields, if there were any
+    console.log('token: ' + req.body.token);
+    console.log('file name: ' + req.file.filename);
 
-app.post('/uploadPic', function (req, res) {
-
-    console.log('upload Pic: entered function');
-
-    var token = req.body.token;
-    var albumArtist = req.body.albumArtist;
-    var albumTitle = req.body.albumTitle;
-    var albumPic = req.body.albumPic;
-
-    console.log('received ' + req.body.token);
-
-    var filesPath = [albums_path, users_path, artist_path, titles_path, log_path];
-
-    async.map(filesPath, function(filePath, cb){ //reading files or dir
-        fs.readFile(filePath, 'utf8', cb);
-    }, function(err, results) {
-        var users = JSON.parse(results[1]);
-        var albums = JSON.parse(results[0]);
-        var log = JSON.parse(results[4]);
-
-        //console.log(users);
-        var userPos = getUserPositionByToken(users, token);
-        //console.log(token)
-
-        //if user exists
-        if(userPos!=null && userPos!=-1 && albumArtist!=null && albumTitle!=null && albumPic!=null)
-        {
-            console.log('upload Pic: user approved');
-            //check if album exists
-            console.log('edit album: will search for: ' + oldTitle + ' ' + oldArtist);
-            var albumPos = getAlbumPosition(albums, albumTitle, albumArtist);
-
-            //album exists
-            if(albumPos == -1)
-            {
-                console.log('upload Pic: album is non-existent');
-                res.status(200).json({
-                    op: 'fail',
-                    error:'album non-existent'
-                })
-            }
-            else {
-
-                console.log('upload Pic: album found. pos: ' + albumPos);
-                //must write file
-
-                albums[albumPos]['pic_name'] = albumPos + '.jpg';
-
-                fs.writeFile(pics_path + albums[albumPos]['pic_name'], albumPic, function (err) {
-                    console.error(err)
-                });
-
-                fs.writeFile(albums_path, JSON.stringify(albums), function (err) {
-                    console.error(err)
-                });
-
-                fs.writeFile(public_albums_path, 'albums=' + JSON.stringify(albums), function (err) {
-                    console.error(err)
-                });
-
-                //update list files
+    if (req.file.filename == 'trash.trash')
+    {
+        res.status(200).json({
+            op: 'fail',
+            error: 'trash'
+        })
+    }
+    else
+    {
+        res.status(200).json({
+            op: 'success'
+        })
+    }
 
 
+    /*
+     fs.rename( __dirname + '/uploads/894929aef414271f5f7a11d00862daa9',  __dirname + '/uploads/test.jpg', function(err) {
+     if ( err ) console.log('ERROR: ' + err);
+     });*/
 
-                //log
-                var log_entry = JSON.parse(album_template);
-
-                log_entry['title'] = albumTitle;
-                log_entry['what_happened'] = 'Album ' + albumTitle + ' edited.';
-                log_entry['when_ih'] = newAlbum['date_included'] + ' ' + getCurrentTime();
-                log_entry['type'] = 2;
-
-                log[log.length] = log_entry;
-                fs.writeFile(log_path, JSON.stringify(log), function (err) {
-                    console.error(err)
-                });
-
-                fs.writeFile(public_log_path, 'log=' + JSON.stringify(log), function (err) {
-                    console.error(err)
-                });
-
-                res.status(200).json({
-                    op: 'success'
-                })
-            }
-
-        }
-        //if not
-        else {
-            console.log('upload Pic: invalid token');
-            res.status(200).json({
-                op: 'fail',
-                error:'token not approved or missing parameters'
-            })
-        }
-    });
-
+    res.send('asd');
 });
-
-
-
 
 
 /**** Put server running ****/
@@ -1084,9 +1064,8 @@ wepPage_router.get("/", function (req, res) {
 wepPage_router.get("/getPicture", function (req, res) {
 
 
-
-    if(req.query.pic_name!=null && req.query.pic_name!='null') {
-        fs.exists(wepPage_path_pics + req.query.pic_name, function(exists) {
+    if (req.query.pic_name != null && req.query.pic_name != 'null') {
+        fs.exists(wepPage_path_pics + req.query.pic_name, function (exists) {
             if (exists) {
                 console.log('getPicture: pic found');
                 res.sendFile(wepPage_path_pics + req.query.pic_name);

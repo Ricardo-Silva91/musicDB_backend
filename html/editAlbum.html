@@ -256,11 +256,11 @@
                             <h3 class="box-title">Cover:</h3>
                         </div>
                         <!-- /.box-header -->
-                        <form class="form-horizontal" id="upload_pic_form">
+                        <form class="form-horizontal" enctype="multipart/form-data" id="upload_pic_form">
                             <div class="box-body">
                                 <div class="form-group text-center center-block" style="margin-right: 0px; margin-left: 0px">
                                     <label for="inputPic">Upload Picture</label>
-                                    <input class="btn-danger" style="margin: auto" type="file" id="inputPic" accept=".jpg, .png">
+                                    <input class="btn-danger" name="myImage" style="margin: auto" type="file" id="inputPic" accept=".jpg, .png">
 
                                     <p class="help-block">Upload album cover pic.</p>
                                 </div>
