@@ -297,7 +297,7 @@ $("#upload_pic_form").on('submit', function (e) {
 
     if ($('input[type=file]#inputPic').val() != "") {
         url_rest = base_url_rest + 'uploadPic_template';
-        alert('upload pic: ' + url_rest);
+        //alert('upload pic: ' + url_rest);
      /*   $.post(url_rest,
             {
                 token: cookie,
@@ -332,7 +332,8 @@ $("#upload_pic_form").on('submit', function (e) {
             contentType: false,
             processData: false,
             success: function(data){
-                alert(data);
+                window.location.reload();
+                //alert(data);
             },
             error: function(jqXHR, textStatus, errorThrown)
             {

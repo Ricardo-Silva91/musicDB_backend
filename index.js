@@ -35,7 +35,7 @@ var storage = multer.diskStorage({
                 console.log('upload Pic: user approved');
                 //check if album exists
                 console.log('upload pic: will search for: ' + albumArtist + ' ' + albumTitle);
-                var albumPos = getAlbumPosition(albums, albumTitle, albumArtist);
+                var albumPos = getAlbumPosition(albums, albumArtist, albumTitle);
 
                 //album exists
                 if (albumPos == -1) {
@@ -144,7 +144,7 @@ app.use(bodyParser.urlencoded({
 /**** Private functions ****/
 
 function isArtistInList(artists, artistName) {
-    res = false;
+    var res = false;
     for (var i = 0; i < artists.length; i++) {
         if (artists[i] == artistName) {
             res = true;
@@ -155,7 +155,7 @@ function isArtistInList(artists, artistName) {
 }
 
 function isTitleInList(titles, title) {
-    res = false;
+    var res = false;
     for (var i = 0; i < titles.length; i++) {
         if (titles[i] == title) {
             res = true;
@@ -175,20 +175,25 @@ function refreshLists() {
 
     fs.readFile(__dirname + "/data/" + "albums.json", 'utf8', function (err, data) {
 
-        data = JSON.parse(data);
-        console.log('data[0]: ' + JSON.stringify(data[0]));
+        var albums = JSON.parse(data);
+        //console.log('data[0]: ' + JSON.stringify(albums[0]));
+        //console.log('albums length: ' + albums.length);
+        //console.log('data[0] title: ' + albums[0]['title']);
 
-        for (var i = 0; i < data.length; i++) {
-            album = data[i];
-            if (!isArtistInList(artists, album['artists'])) {
-                artists[artists.length] = album['artists'];
+        for (var i = 0; i < albums.length; i++) {
+            album = albums[i];
+            if (!isArtistInList(artists, album['artist'])) {
+                //console.log(album['artists']);
+                artists[artists.length] = album['artist'];
             }
             if (!isTitleInList(titles, album['title'])) {
                 titles[titles.length] = album['title'];
             }
         }
-        
-        fs.writeFile(public_albums_path, 'albums=' + JSON.stringify(data), function (err) {
+
+        //console.log(JSON.stringify(artists));
+
+        fs.writeFile(public_albums_path, 'albums=' + JSON.stringify(albums), function (err) {
             console.error(err)
         });
 
@@ -659,7 +664,8 @@ app.post('/editAlbum', function (req, res) {
                 newAlbum['artist'] = albumArtist;
                 newAlbum['genre'] = albumGenre;
                 newAlbum['comment'] = albumComment;
-                newAlbum['approved'] = albumApproved;
+                newAlbum['approved'] = albumApproved == "true";
+                console.log(newAlbum['approved']);
 
                 albums[albumPos] = newAlbum;
                 fs.writeFile(albums_path, JSON.stringify(albums), function (err) {
