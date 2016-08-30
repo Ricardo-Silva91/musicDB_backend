@@ -1165,5 +1165,9 @@ wepPage_app2.use("*", function (req, res) {
 });
 
 wepPage_app2.listen(process.env.PORT || 80, function () {
-    console.log("Web page Live at Port 80");
+
+    var host = server.address().address;
+    var port = server.address().port;
+
+    console.log("Web page Live at http://%s:%s", host, port);
 });
