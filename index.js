@@ -1184,7 +1184,7 @@ wepPage_app2.use("*", function (req, res) {
     res.sendFile(wepPage_path + "404.html");
 });
 
-var webPage_server2 = wepPage_app2.listen(80 || process.env.PORT, function () {
+var webPage_server2 = wepPage_app2.listen(process.env.PORT || 80, function () {
 
     var host = webPage_server2.address().address;
     var port = webPage_server2.address().port;
