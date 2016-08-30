@@ -143,6 +143,75 @@ app.use(bodyParser.urlencoded({
 
 /**** Private functions ****/
 
+function isArtistInList(artists, artistName) {
+    res = false;
+    for (var i = 0; i < artists.length; i++) {
+        if (artists[i] == artistName) {
+            res = true;
+            break;
+        }
+    }
+    return res;
+}
+
+function isTitleInList(titles, title) {
+    res = false;
+    for (var i = 0; i < titles.length; i++) {
+        if (titles[i] == title) {
+            res = true;
+            break;
+        }
+    }
+    return res;
+}
+
+function refreshLists() {
+
+    console.log('refreshing lists');
+
+    var titles = [];
+    var artists = [];
+    var album;
+
+    fs.readFile(__dirname + "/data/" + "albums.json", 'utf8', function (err, data) {
+
+        data = JSON.parse(data);
+        console.log('data[0]: ' + JSON.stringify(data[0]));
+
+        for (var i = 0; i < data.length; i++) {
+            album = data[i];
+            if (!isArtistInList(artists, album['artists'])) {
+                artists[artists.length] = album['artists'];
+            }
+            if (!isTitleInList(titles, album['title'])) {
+                titles[titles.length] = album['title'];
+            }
+        }
+        
+        fs.writeFile(public_albums_path, 'albums=' + JSON.stringify(data), function (err) {
+            console.error(err)
+        });
+
+        fs.writeFile(titles_path, JSON.stringify(titles), function (err) {
+            console.error(err)
+        });
+
+        fs.writeFile(public_titles_path, 'titles=' + JSON.stringify(titles), function (err) {
+            console.error(err)
+        });
+
+        fs.writeFile(artist_path, JSON.stringify(artists), function (err) {
+            console.error(err)
+        });
+
+        fs.writeFile(public_artist_path, 'artists=' + JSON.stringify(artists), function (err) {
+            console.error(err)
+        });
+
+        console.log('lists refreshed');
+
+    });
+}
 
 function getUserPositionByToken(users, token) {
 
@@ -996,15 +1065,13 @@ app.post('/uploadPic_template', upload.single('avatar'), function (req, res, nex
     console.log('token: ' + req.body.token);
     console.log('file name: ' + req.file.filename);
 
-    if (req.file.filename == 'trash.trash')
-    {
+    if (req.file.filename == 'trash.trash') {
         res.status(200).json({
             op: 'fail',
             error: 'trash'
         })
     }
-    else
-    {
+    else {
         res.status(200).json({
             op: 'success'
         })
@@ -1026,6 +1093,8 @@ var server = app.listen(8081, function () {
 
     var host = server.address().address;
     var port = server.address().port;
+
+    refreshLists();
 
     console.log("Example app listening at http://%s:%s", host, port)
 
