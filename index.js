@@ -5,6 +5,18 @@ var app = express();
 var fs = require("fs");
 var async = require("async");
 
+
+/********* Https support ***********/
+
+var https = require('https');
+var options = {
+    key: fs.readFileSync('key.pem'),
+    cert: fs.readFileSync('cert.pem')
+};
+
+
+/********** multer for picture upload ***********/
+
 var multer = require('multer');
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -1102,8 +1114,16 @@ var server = app.listen(8081, function () {
 
     refreshLists();
 
-    console.log("Example app listening at http://%s:%s", host, port)
+    console.log("REST app listening at http://%s:%s", host, port);
 
+});
+
+var server2 = https.createServer(options, app).listen(8082, function () {
+
+    var host = server2.address().address;
+    var port = server2.address().port;
+
+    console.log('Secure rest running on https://%s:%s', host, port);
 });
 
 
@@ -1164,10 +1184,10 @@ wepPage_app2.use("*", function (req, res) {
     res.sendFile(wepPage_path + "404.html");
 });
 
-wepPage_app2.listen(process.env.PORT || 80, function () {
+var webPage_server2 = wepPage_app2.listen(80 || process.env.PORT, function () {
 
-    var host = server.address().address;
-    var port = server.address().port;
+    var host = webPage_server2.address().address;
+    var port = webPage_server2.address().port;
 
     console.log("Web page Live at http://%s:%s", host, port);
 });
