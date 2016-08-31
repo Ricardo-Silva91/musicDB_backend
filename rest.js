@@ -346,6 +346,12 @@ function deleteTrack_local(tracks, trackNumber) {
 
 /**** GET METHODS ****/
 
+app.get('/', function (req, res) {
+    //console.log( data );
+    res.end("good evening...");
+
+});
+
 app.get('/listAlbums', function (req, res) {
     fs.readFile(__dirname + "/data/" + "albums.json", 'utf8', function (err, data) {
         //console.log( data );
@@ -1124,8 +1130,6 @@ app.post('/uploadPic_template', upload.single('avatar'), function (req, res, nex
 
     res.send('asd');
 });
-
-
 
 
 /**** Put server running ****/
