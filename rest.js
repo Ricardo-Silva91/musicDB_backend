@@ -359,6 +359,32 @@ app.get('/listAlbums', function (req, res) {
     });
 });
 
+app.get('/getPublic_albums', function (req, res) {
+    fs.readFile(public_albums_path, 'utf8', function (err, data) {
+        //console.log( data );
+        res.end(data);
+    });
+});
+app.get('/getPublic_titles', function (req, res) {
+    fs.readFile(public_titles_path, 'utf8', function (err, data) {
+        //console.log( data );
+        res.end(data);
+    });
+});
+app.get('/getPublic_artists', function (req, res) {
+    fs.readFile(public_artist_path, 'utf8', function (err, data) {
+        //console.log( data );
+        res.end(data);
+    });
+});
+app.get('/getPublic_log', function (req, res) {
+    fs.readFile(public_log_path, 'utf8', function (err, data) {
+        //console.log( data );
+        res.end(data);
+    });
+});
+
+
 app.get('/getAlbumDetails/:id', function (req, res) {
     // First read existing users.
     fs.readFile(__dirname + "/data/" + "albums.json", 'utf8', function (err, data) {
