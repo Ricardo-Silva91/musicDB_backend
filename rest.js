@@ -488,7 +488,7 @@ app.get('/logout', function (req, res) {
 
 app.get('/getPrivate_albums', function (req, res) {
 
-    var token = req.body.token;
+    var token = req.query.token;
     var filesPath = [albums_path, users_path];
 
     async.map(filesPath, function (filePath, cb) { //reading files or dir
