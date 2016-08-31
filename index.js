@@ -273,7 +273,7 @@ function getCurrentDate() {
     if (mm < 10) {
         mm = '0' + mm
     }
-    today = dd + '/' + mm + '/' + yyyy;
+    today = mm + '/' + dd + '/' + yyyy;
     return today;
 }
 
@@ -542,7 +542,7 @@ app.post('/addAlbum', function (req, res) {
                 newAlbum['artist'] = albumArtist;
                 newAlbum['date_included'] = getCurrentDate();
 
-                if (sampled = true) {
+                if (sampled == "true") {
                     newAlbum['genre'] = "samples"
                 }
 
@@ -1107,7 +1107,7 @@ app.post('/uploadPic_template', upload.single('avatar'), function (req, res, nex
 
 /**** Put server running ****/
 
-var server = app.listen(8081, function () {
+var server = app.listen(8080, function () {
 
     var host = server.address().address;
     var port = server.address().port;
@@ -1118,6 +1118,7 @@ var server = app.listen(8081, function () {
 
 });
 
+/*
 var server2 = https.createServer(options, app).listen(8080, function () {
 
     var host = server2.address().address;
@@ -1125,7 +1126,7 @@ var server2 = https.createServer(options, app).listen(8080, function () {
 
     console.log('Secure rest running on https://%s:%s', host, port);
 });
-
+*/
 
 /********************* Break! this section is for routine check on server ******************/
 
@@ -1185,19 +1186,19 @@ wepPage_app2.use("*", function (req, res) {
     res.sendFile(wepPage_path + "404.html");
 });
 
-/*
+
 var webPage_server2 = wepPage_app2.listen(process.env.PORT || 80, function () {
 
     var host = webPage_server2.address().address;
     var port = webPage_server2.address().port;
 
     console.log("Web page Live at http://%s:%s", host, port);
-});*/
-
+});
+/*
 var webPage_server2 = wepPage_https.createServer(options, wepPage_app2).listen(process.env.PORT || 443, function () {
 
     var host = webPage_server2.address().address;
     var port = webPage_server2.address().port;
 
     console.log('Secure Web page Live at https://%s:%s', host, port);
-});
+});*/

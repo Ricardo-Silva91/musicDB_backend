@@ -22,14 +22,14 @@ $(document).ready(function () {
     $('#inputComment')[0].value = albums[id]['comment'];
     $('#approved_checkbox')[0].checked = albums[id]['approved'];
 
-    if (imageExists(base_url_for_pics + albums[id]['pic_name'])) {
+    //if (imageExists(base_url_for_pics + albums[id]['pic_name'])) {
         //alert('will load pic')
         $("#albumPicShow").attr("src", base_url_for_pics + albums[id]['pic_name']);
-    }
-    else {
-        $("#albumPicShow").attr("src", 'img/404.gif');
+    //}
+    //else {
+    //    $("#albumPicShow").attr("src", 'img/404.gif');
         //alert('nope')
-    }
+    //}
 
     var t = $('#tracksTable').DataTable();
 
