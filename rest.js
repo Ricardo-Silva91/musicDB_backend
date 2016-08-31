@@ -486,6 +486,34 @@ app.get('/logout', function (req, res) {
     });
 });
 
+app.get('/getPrivate_albums', function (req, res) {
+
+    var token = req.body.token;
+    var filesPath = [albums_path, users_path];
+
+    async.map(filesPath, function (filePath, cb) { //reading files or dir
+        fs.readFile(filePath, 'utf8', cb);
+    }, function (err, results) {
+        var users = JSON.parse(results[1]);
+        var albums = JSON.parse(results[0]);
+
+        var userPos = getUserPositionByToken(users, token);
+
+        if (userPos != null && userPos != -1) {
+            //console.log('jogos')
+            res.status(200).end(albums);
+        }
+        else {
+            //console.log('jogos2131')
+            res.status(200).json({
+                op: 'fail'
+            });
+        }
+
+    });
+
+});
+
 app.get('/numberOfAlbums', function (req, res) {
 
     console.log('numberOfAlbums: entered')
