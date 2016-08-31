@@ -1,7 +1,7 @@
 /**
  * Created by rofler on 8/28/16.
  */
- var going_local = true;
+ var going_local = false;
 
  if (going_local) {
 	var base_url_rest = "http://localhost:8080/";
