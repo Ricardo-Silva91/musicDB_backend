@@ -5,6 +5,8 @@ var app = express();
 var fs = require("fs");
 var async = require("async");
 
+var archiver = require('archiver');
+var p = require('path');
 
 /********* Https support ***********/
 
@@ -487,6 +489,43 @@ app.get('/numberOfAlbums', function (req, res) {
     });
 
 });
+
+
+app.get('/downloadData', function(req, res) {
+
+    var archive = archiver('zip');
+
+    archive.on('error', function(err) {
+        res.status(500).send({error: err.message});
+    });
+
+    //on stream closed we can end the request
+    archive.on('end', function() {
+        console.log('Archive wrote %d bytes', archive.pointer());
+    });
+
+    //set the archive name
+    res.attachment('musicDB_data.zip');
+
+    //this is the streaming magic
+    archive.pipe(res);
+
+  /*  var files = [albums_path, artist_path];
+
+    for(var i in files) {
+        archive.file(files[i], { name: p.basename(files[i]) });
+    }
+*/
+    var directories = [__dirname + '/data']
+
+    for(var i in directories) {
+        archive.directory(directories[i], directories[i].replace(__dirname + '/data', ''));
+    }
+
+    archive.finalize();
+
+});
+
 
 /**** POST methods ****/
 
