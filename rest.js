@@ -5,6 +5,8 @@ var app = express();
 var fs = require("fs");
 var async = require("async");
 
+var archiver = require('archiver');
+var p = require('path');
 
 /********* Https support ***********/
 
@@ -346,44 +348,12 @@ function deleteTrack_local(tracks, trackNumber) {
 
 /**** GET METHODS ****/
 
-app.get('/', function (req, res) {
-    //console.log( data );
-    res.end("good evening...");
-
-});
-
 app.get('/listAlbums', function (req, res) {
     fs.readFile(__dirname + "/data/" + "albums.json", 'utf8', function (err, data) {
         //console.log( data );
         res.end(data);
     });
 });
-
-app.get('/getPublic_albums', function (req, res) {
-    fs.readFile(public_albums_path, 'utf8', function (err, data) {
-        //console.log( data );
-        res.end(data);
-    });
-});
-app.get('/getPublic_titles', function (req, res) {
-    fs.readFile(public_titles_path, 'utf8', function (err, data) {
-        //console.log( data );
-        res.end(data);
-    });
-});
-app.get('/getPublic_artists', function (req, res) {
-    fs.readFile(public_artist_path, 'utf8', function (err, data) {
-        //console.log( data );
-        res.end(data);
-    });
-});
-app.get('/getPublic_log', function (req, res) {
-    fs.readFile(public_log_path, 'utf8', function (err, data) {
-        //console.log( data );
-        res.end(data);
-    });
-});
-
 
 app.get('/getAlbumDetails/:id', function (req, res) {
     // First read existing users.
@@ -486,34 +456,6 @@ app.get('/logout', function (req, res) {
     });
 });
 
-app.get('/getPrivate_albums', function (req, res) {
-
-    var token = req.query.token;
-    var filesPath = [albums_path, users_path];
-
-    async.map(filesPath, function (filePath, cb) { //reading files or dir
-        fs.readFile(filePath, 'utf8', cb);
-    }, function (err, results) {
-        var users = JSON.parse(results[1]);
-        var albums = JSON.parse(results[0]);
-
-        var userPos = getUserPositionByToken(users, token);
-
-        if (userPos != null && userPos != -1) {
-            //console.log('jogos')
-            res.status(200).end(albums);
-        }
-        else {
-            //console.log('jogos2131')
-            res.status(200).json({
-                op: 'fail'
-            });
-        }
-
-    });
-
-});
-
 app.get('/numberOfAlbums', function (req, res) {
 
     console.log('numberOfAlbums: entered')
@@ -548,24 +490,40 @@ app.get('/numberOfAlbums', function (req, res) {
 
 });
 
-app.get("/getPicture", function (req, res) {
 
+app.get('/downloadData', function(req, res) {
 
-    if (req.query.pic_name != null && req.query.pic_name != 'null') {
-        fs.exists(pics_path + req.query.pic_name, function (exists) {
-            if (exists) {
-                console.log('getPicture: pic found');
-                res.sendFile(pics_path + req.query.pic_name);
-            } else {
-                console.log('getPicture: pic non-existent');
-                res.sendFile(pics_path + "notAvaliable.jpg");
-            }
-        });
+    var archive = archiver('zip');
 
+    archive.on('error', function(err) {
+        res.status(500).send({error: err.message});
+    });
+
+    //on stream closed we can end the request
+    archive.on('end', function() {
+        console.log('Archive wrote %d bytes', archive.pointer());
+    });
+
+    //set the archive name
+    res.attachment('musicDB_data.zip');
+
+    //this is the streaming magic
+    archive.pipe(res);
+
+  /*  var files = [albums_path, artist_path];
+
+    for(var i in files) {
+        archive.file(files[i], { name: p.basename(files[i]) });
     }
-    else {
-        res.sendFile(pics_path + "notAvaliable.jpg");
+*/
+    var directories = [__dirname + '/data']
+
+    for(var i in directories) {
+        archive.directory(directories[i], directories[i].replace(__dirname + '/data', ''));
     }
+
+    archive.finalize();
+
 });
 
 
@@ -1200,14 +1158,14 @@ var server = app.listen(process.env.PORT || 80, function () {
 });
 
 /*
- var server2 = https.createServer(options, app).listen(8080, function () {
+var server2 = https.createServer(options, app).listen(8080, function () {
 
- var host = server2.address().address;
- var port = server2.address().port;
+    var host = server2.address().address;
+    var port = server2.address().port;
 
- console.log('Secure rest running on https://%s:%s', host, port);
- });
- */
+    console.log('Secure rest running on https://%s:%s', host, port);
+});
+*/
 
 /********************* Break! this section is for routine check on server ******************/
 
@@ -1216,4 +1174,3 @@ setInterval(function () {
     console.log("I am doing my 6 seconds check");
     // do your stuff here
 }, the_interval);
-
