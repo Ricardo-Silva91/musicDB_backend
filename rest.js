@@ -358,25 +358,25 @@ app.get('/listAlbums', function (req, res) {
 app.get('/listPublicAlbums', function (req, res) {
     fs.readFile(public_albums_path, 'utf8', function (err, data) {
         //console.log( data );
-        res.end('albums = ' + data);
+        res.end(data);
     });
 });
 app.get('/listPublicArtists', function (req, res) {
     fs.readFile(public_artist_path, 'utf8', function (err, data) {
         //console.log( data );
-        res.end('albums = ' + data);
+        res.end(data);
     });
 });
 app.get('/listPublicTitles', function (req, res) {
     fs.readFile(public_titles_path, 'utf8', function (err, data) {
         //console.log( data );
-        res.end('albums = ' + data);
+        res.end(data);
     });
 });
 app.get('/listPublicLog', function (req, res) {
     fs.readFile(public_log_path, 'utf8', function (err, data) {
         //console.log( data );
-        res.end('albums = ' + data);
+        res.end(data);
     });
 });
 
