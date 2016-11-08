@@ -526,6 +526,26 @@ app.get('/downloadData', function(req, res) {
 
 });
 
+app.get("/getPicture", function (req, res) {
+
+
+    if (req.query.pic_name != null && req.query.pic_name != 'null') {
+        fs.exists(pics_path + req.query.pic_name, function (exists) {
+            if (exists) {
+                console.log('getPicture: pic found');
+                res.sendFile(pics_path + req.query.pic_name);
+            } else {
+                console.log('getPicture: pic non-existent');
+                res.sendFile(pics_path + "notAvaliable.jpg");
+            }
+        });
+
+    }
+    else {
+        res.sendFile(pics_path + "notAvaliable.jpg");
+    }
+});
+
 
 /**** POST methods ****/
 
