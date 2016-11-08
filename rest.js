@@ -355,6 +355,13 @@ app.get('/listAlbums', function (req, res) {
     });
 });
 
+app.get('/listPublicAlbums', function (req, res) {
+    fs.readFile(__dirname + "/data/" + "albums.json", 'utf8', function (err, data) {
+        //console.log( data );
+        res.end('albums = ' + data);
+    });
+});
+
 app.get('/getAlbumDetails/:id', function (req, res) {
     // First read existing users.
     fs.readFile(__dirname + "/data/" + "albums.json", 'utf8', function (err, data) {
