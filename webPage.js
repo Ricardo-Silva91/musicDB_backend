@@ -26,7 +26,7 @@ wepPage_app2.use("*", function (req, res) {
 });
 
 
-var webPage_server2 = wepPage_app2.listen(process.env.PORT || 80, function () {
+var webPage_server2 = wepPage_app2.listen(process.env.PORT || 3000, function () {
 
     var host = webPage_server2.address().address;
     var port = webPage_server2.address().port;
