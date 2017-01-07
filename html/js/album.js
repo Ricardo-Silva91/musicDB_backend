@@ -22,6 +22,7 @@ console.log("i: " + i);
 $('#page_title').text(albums[i].title);
 
 $('#searchOnY_button').attr('href', "https://www.youtube.com/results?search_query=" + albums[i].artist + "+" + albums[i].title);
+    $('#searchOnLFM_button').attr('href', "http://www.last.fm/music/" + albums[i].artist + "/" + albums[i].title);
 
 if(albums[i].approved == true)
 {

@@ -25,6 +25,7 @@ $('#page_title').text(c);
 $('#header_a').text($('#header_a').text() + c);
 
 $('#searchOnY_button').attr('href', "https://www.youtube.com/results?search_query=" + c);
+$('#searchOnLFM_button').attr('href', "http://www.last.fm/music/" + c);
 
 count=1;
 
