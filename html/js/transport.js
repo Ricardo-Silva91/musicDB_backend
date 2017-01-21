@@ -4,7 +4,9 @@ function artistClick(art)
 {
     artist=art;
     //alert(artist);
-    window.location.href = "artist.html?myVar1="+ encodeURI(artist);
+    //window.location.href = "artist.html?myVar1="+ encodeURI(artist);
+    var win = window.open("artist.html?myVar1="+ encodeURI(artist), '_blank');
+    win.focus();
 
 
 }

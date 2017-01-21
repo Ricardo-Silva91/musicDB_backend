@@ -37,7 +37,7 @@ $(document).ready(function () {
     for (var i = 0 ; i < albums.length; i++) {
         if(albums[i].approved==true)
         {
-            $('#table_app > tbody:last-child').append('<tr > <td>' +count+ '</td> <td style="cursor: pointer;" onclick="albumClick('+"'"+albums[i].id+"'"+')" target="_blank" >' +albums[i].title+ '</td> <td style="cursor: pointer;" onclick="artistClick(\''+rfc3986EncodeURIComponent(albums[i].artist)+'\')"">' +albums[i].artist+ '</td> <td>' +albums[i].date_included+ '</td></tr>');
+            $('#table_app > tbody:last-child').append('<tr > <td>' +count+ '</td> <td style="cursor: pointer;" onclick="albumClick('+"'"+albums[i].id+"'"+')" target="_blank" >' +albums[i].title+ '</td> <td style="cursor: pointer;" onclick="artistClick(\''+rfc3986EncodeURIComponent(albums[i].artist)+'\')" target="_blank" >' +albums[i].artist+ '</td> <td>' +albums[i].date_included+ '</td></tr>');
 
             var date2 = new Date(albums[i].date_included);
             var timeDiff = Math.abs(today.getTime() - date2.getTime());
