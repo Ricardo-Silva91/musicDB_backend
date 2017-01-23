@@ -1,6 +1,9 @@
 /**
  * Created by rofler on 8/31/16.
  */
+
+var db_url = "http://188.37.120.37:5000/";
+
 var wepPage_express = require("express");
 var wepPage_app2 = wepPage_express();
 var wepPage_router = wepPage_express.Router();
@@ -16,6 +19,23 @@ wepPage_router.use(function (req, res, next) {
 wepPage_router.get("/", function (req, res) {
     res.sendFile(wepPage_path + "index.html");
 });
+
+var proxy = require('http-proxy').createProxyServer({
+    host: db_url,
+    // port: 80
+});
+wepPage_router.use(
+    [
+        '/rest_server'
+    ],
+    function (req, res, next) {
+
+        console.log(req.url);
+
+        proxy.web(req, res, {
+            target: db_url
+        }, next);
+    });
 
 wepPage_app2.use("/", wepPage_router);
 

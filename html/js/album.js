@@ -65,9 +65,9 @@ else
 
 
     if(albums[i].pic_name!=null)
-        $('#album_pic').attr("src", 'http://188.37.120.37:5000/getPicture?pic_name='+albums[i].pic_name);
+        $('#album_pic').attr("src", location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '') + "/rest_server/getPicture?pic_name="+albums[i].pic_name);
     else
-        $('#album_pic').attr("src", 'http://188.37.120.37:5000/getPicture?pic_name=notAvailable.jpg');
+        $('#album_pic').attr("src", location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '') + "/rest_server/getPicture?pic_name=notAvailable.jpg");
 /*
     if(albums[i].pic_name!=null)
         $('#album_pic').attr("src", 'https://musicbackendrest.herokuapp.com/getPicture?pic_name='+albums[i].pic_name);
