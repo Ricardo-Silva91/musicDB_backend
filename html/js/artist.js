@@ -32,7 +32,12 @@ count=1;
 for (var i = 0 ; i < albums.length; i++) {
         if(albums[i].artist==c)
         {
-            $('#table_art_albums > tbody:last-child').append('<tr> <td>' +count+ '</td> <td style="cursor: pointer;" onclick="albumClick('+"'"+albums[i].id+"'"+')">' +albums[i].title+ '</td> <td>' +albums[i].date_included+ '</td> <td>' +albums[i].approved+ '</td></tr>');
+            if (albums[i].genre == 'samples')
+                $('#table_art_albums > tbody:last-child').append('<tr style="background-color: #f0ad4e;"> <td>' +count+ '</td> <td style="cursor: pointer;" onclick="albumClick('+"'"+albums[i].id+"'"+')">' +albums[i].title+ '</td> <td>' +albums[i].date_included+ '</td> <td>' +albums[i].approved+ '</td></tr>');
+            else if(albums[i].approved == true)
+                $('#table_art_albums > tbody:last-child').append('<tr style="background-color: #5cb85c;"> <td>' +count+ '</td> <td style="cursor: pointer;" onclick="albumClick('+"'"+albums[i].id+"'"+')">' +albums[i].title+ '</td> <td>' +albums[i].date_included+ '</td> <td>' +albums[i].approved+ '</td></tr>');
+            else
+                $('#table_art_albums > tbody:last-child').append('<tr style="background-color: #d9534f;"> <td>' +count+ '</td> <td style="cursor: pointer;" onclick="albumClick('+"'"+albums[i].id+"'"+')">' +albums[i].title+ '</td> <td>' +albums[i].date_included+ '</td> <td>' +albums[i].approved+ '</td></tr>');
             count++;
         }
     }
