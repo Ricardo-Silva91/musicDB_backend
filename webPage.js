@@ -2,7 +2,7 @@
  * Created by rofler on 8/31/16.
  */
 
-var db_url = "http://188.37.120.37:5000/";
+var db_url = "http://94.63.5.193:5000/";
 
 var wepPage_express = require("express");
 var wepPage_app2 = wepPage_express();
@@ -53,3 +53,10 @@ var webPage_server2 = wepPage_app2.listen(process.env.PORT || 4000, function () 
 
     console.log("Web page Live at http://%s:%s", host, port);
 });
+/*
+var http = require("http");
+setInterval(function() {
+    console.log("doing my check");
+    http.get("http://musicfrontend.herokuapp.com");
+    http.get("http://musicbackend.herokuapp.com");
+}, 300000); // every 5 minutes (300000)*/
