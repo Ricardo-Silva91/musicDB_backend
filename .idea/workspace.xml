@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8d72ccf8-a350-43b6-95ab-d6178ea5248b" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/html/js/mine.js" afterPath="$PROJECT_DIR$/html/js/mine.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/webPage.js" afterPath="$PROJECT_DIR$/webPage.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/html/pages/logView.html" afterPath="$PROJECT_DIR$/html/pages/logView.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -22,11 +20,31 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/index.js">
+      <file leaf-file-name="webPage.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/webPage.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-4463">
-              <caret line="189" column="26" lean-forward="false" selection-start-line="189" selection-start-column="26" selection-end-line="189" selection-end-column="26" />
+            <state relative-caret-position="306">
+              <caret line="18" column="25" lean-forward="false" selection-start-line="18" selection-start-column="25" selection-end-line="18" selection-end-column="25" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="logView.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/html/pages/logView.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="407">
+              <caret line="185" column="106" lean-forward="false" selection-start-line="185" selection-start-column="106" selection-end-line="185" selection-end-column="106" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/html/pages/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="405">
+              <caret line="402" column="56" lean-forward="true" selection-start-line="402" selection-start-column="56" selection-end-line="413" selection-end-column="106" />
               <folding />
             </state>
           </provider>
@@ -56,6 +74,8 @@
         <option value="$PROJECT_DIR$/webPage.js" />
         <option value="$PROJECT_DIR$/html/js/mine.js" />
         <option value="$PROJECT_DIR$/html/js/transport.js" />
+        <option value="$PROJECT_DIR$/index.js" />
+        <option value="$PROJECT_DIR$/html/pages/logView.html" />
       </list>
     </option>
   </component>
@@ -112,6 +132,24 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="html" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="musicDB_backend" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="musicDB_backend" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="html" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pages" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -175,7 +213,7 @@
       <method />
     </configuration>
     <configuration default="true" type="js.build_tools.npm" factoryName="npm">
-      <command value="run-script" />
+      <command value="run" />
       <scripts />
       <node-interpreter value="project" />
       <envs />
@@ -227,11 +265,12 @@
       <workItem from="1485988710499" duration="17000" />
       <workItem from="1486155852021" duration="286000" />
       <workItem from="1486551411207" duration="52000" />
+      <workItem from="1489527825812" duration="343000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4341000" />
+    <option name="totallyTimeSpent" value="4684000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="0" width="974" height="1087" extended-state="0" />
@@ -268,6 +307,14 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/webPage.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -282,13 +329,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/html/pages/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6885">
-          <caret line="405" column="29" lean-forward="false" selection-start-line="405" selection-start-column="17" selection-end-line="405" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/html/pages/index.html" />
     <entry file="file://$PROJECT_DIR$/webPage.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
@@ -296,13 +337,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/html/js/artist.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/html/js/artist.js" />
     <entry file="file://$PROJECT_DIR$/html/js/mine.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4284">
@@ -310,13 +345,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/html/pages/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6885">
-          <caret line="405" column="29" lean-forward="false" selection-start-line="405" selection-start-column="17" selection-end-line="405" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/html/pages/index.html" />
     <entry file="file://$PROJECT_DIR$/webPage.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
@@ -324,13 +353,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/html/js/artist.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/html/js/artist.js" />
     <entry file="file://$PROJECT_DIR$/html/js/mine.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4284">
@@ -338,13 +361,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/html/pages/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6885">
-          <caret line="405" column="29" lean-forward="false" selection-start-line="405" selection-start-column="17" selection-end-line="405" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/html/pages/index.html" />
     <entry file="file://$PROJECT_DIR$/webPage.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -386,24 +403,21 @@
     <entry file="file://$PROJECT_DIR$/html/pages/artist.html" />
     <entry file="file://$PROJECT_DIR$/html/pages/blank.html" />
     <entry file="file://$PROJECT_DIR$/html/js/album.js" />
-    <entry file="file://$PROJECT_DIR$/html/js/artist.js">
+    <entry file="file://$PROJECT_DIR$/html/js/artist.js" />
+    <entry file="file://$PROJECT_DIR$/html/js/transport.js" />
+    <entry file="file://$PROJECT_DIR$/html/js/mine.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="341">
-          <caret line="38" column="16" lean-forward="false" selection-start-line="38" selection-start-column="16" selection-end-line="38" selection-end-column="16" />
+        <state relative-caret-position="17">
+          <caret line="39" column="291" lean-forward="false" selection-start-line="39" selection-start-column="291" selection-end-line="39" selection-end-column="291" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/html/pages/index.html">
+    <entry file="file://$PROJECT_DIR$/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="856">
-          <caret line="405" column="29" lean-forward="false" selection-start-line="405" selection-start-column="17" selection-end-line="405" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/webPage.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1037">
-          <caret line="61" column="36" lean-forward="false" selection-start-line="61" selection-start-column="36" selection-end-line="61" selection-end-column="36" />
+        <state relative-caret-position="1802">
+          <caret line="106" column="0" lean-forward="false" selection-start-line="106" selection-start-column="0" selection-end-line="106" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -411,62 +425,30 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/html/js/transport.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="7" column="4" lean-forward="false" selection-start-line="7" selection-start-column="4" selection-end-line="7" selection-end-column="4" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/html/js/mine.js">
+    <entry file="file://$PROJECT_DIR$/webPage.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="39" column="291" lean-forward="false" selection-start-line="39" selection-start-column="291" selection-end-line="39" selection-end-column="291" />
-          <folding>
-            <marker date="1486156047792" expanded="true" signature="985:1001" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="1090:1106" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="3568:3584" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="3911:3927" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="4260:4276" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="4604:4620" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="7022:7038" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="7125:7141" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="7742:7758" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="7845:7861" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="8425:8451" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="8486:8502" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="8589:8605" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="8893:8919" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="8954:8970" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="9057:9073" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="9362:9402" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="9437:9453" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="9540:9556" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="10320:10346" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="10381:10397" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="10484:10500" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="10796:10822" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="10857:10873" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="10960:10976" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="11273:11313" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="11348:11364" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="11451:11467" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="12473:12489" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="12576:12592" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="13292:13308" ph="..." />
-            <marker date="1486156047792" expanded="true" signature="13395:13411" ph="..." />
-          </folding>
+        <state relative-caret-position="306">
+          <caret line="18" column="25" lean-forward="false" selection-start-line="18" selection-start-column="25" selection-end-line="18" selection-end-column="25" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.js">
+    <entry file="file://$PROJECT_DIR$/html/pages/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4463">
-          <caret line="189" column="26" lean-forward="false" selection-start-line="189" selection-start-column="26" selection-end-line="189" selection-end-column="26" />
+        <state relative-caret-position="405">
+          <caret line="402" column="56" lean-forward="true" selection-start-line="402" selection-start-column="56" selection-end-line="413" selection-end-column="106" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/html/pages/logView.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="407">
+          <caret line="185" column="106" lean-forward="false" selection-start-line="185" selection-start-column="106" selection-end-line="185" selection-end-column="106" />
           <folding />
         </state>
       </provider>
