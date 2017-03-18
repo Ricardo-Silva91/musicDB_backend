@@ -1,0 +1,142 @@
+<!DOCTYPE HTML>
+<!--
+	Aerial by HTML5 UP
+	html5up.net | @n33co
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+<head>
+    <link rel="shortcut icon" href="favicon.ico">
+    <title>My Music Collection</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <!--[if lte IE 8]>
+    <script src="css/ie/html5shiv.js"></script><![endif]-->
+    <script src="js/skel.min.js"></script>
+    <script src="js/init.js"></script>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <script
+            src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+            crossorigin="anonymous"></script>
+
+    <noscript>
+        <link rel="stylesheet" href="css/skel.css"/>
+        <link rel="stylesheet" href="css/style.css"/>
+        <link rel="stylesheet" href="css/style-wide.css"/>
+        <link rel="stylesheet" href="css/style-noscript.css"/>
+    </noscript>
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" href="css/ie/v9.css"/><![endif]-->
+
+    <link rel="stylesheet" href="css/mine.css"/>
+    <link rel="stylesheet" href="css/dataTables.css"/>
+
+
+
+</head>
+<body class="loading">
+<div id="wrapper">
+    <div id="bg"></div>
+    <div id="overlay"></div>
+    <div id="main">
+
+        <!-- Header -->
+        <header id="header">
+            <h1>My Music Collection</h1>
+            <p>Nobody Cares...</p>
+            <nav>
+                <ul>
+                    <li><a href="#" class="glyphicon glyphicon-globe"><span class="label">Twitter</span></a></li>
+                    <!--<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
+                    <li><a href="#" class="icon fa-dribbble"><span class="label">Dribbble</span></a></li>
+                    <li><a href="#" class="icon fa-github"><span class="label">Github</span></a></li>
+                    <li><a href="#" class="icon fa-envelope-o"><span class="label">Email</span></a></li>-->
+                </ul>
+            </nav>
+
+
+        </header>
+
+        <!-- Footer -->
+        <footer id="footer">
+            <span class="copyright">&copy; BadReviews</span>
+        </footer>
+    </div>
+</div>
+
+
+<div id="modals">
+    <div class="modal fade" id="albumListModal" role="dialog">
+        <div class="modal-dialog modal-lg " style="width: 90%">
+
+            <!-- Modal content-->
+            <div class="modal-content text-center">
+                <div class="modal-header ">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="modalTitle0"> All Albums </h4>
+                </div>
+                <div class="modal-body">
+                    <table id="albumTable" class="display" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <!--<th>pic</th>-->
+                            <th style="text-align: center">id</th>
+                            <th style="text-align: center">title</th>
+                            <th style="text-align: center">artist</th>
+                            <th style="text-align: center">genre</th>
+                            <th style="text-align: center">Approved</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                <!--<div class="modal-footer">
+
+                </div>-->
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="loaderModal" role="dialog">
+        <div class="modal-dialog modal-sm ">
+
+            <!-- Modal content-->
+                    <div class="loader centerOfScreen"></div>
+                <!--<div class="modal-footer">
+
+                </div>-->
+        </div>
+    </div>
+
+</div>
+
+
+<div id="remote_data">
+
+    <script src="/rest_server/listPublicAlbums"></script>
+    <script src="/rest_server/listPublicArtists"></script>
+    <script src="/rest_server/listPublicTitles"></script>
+    <script src="/rest_server/listPublicLog"></script>
+
+</div>
+
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+<script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.1.1/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.1.1/js/responsive.bootstrap.min.js"></script>
+
+
+<script src="js/mine.js"></script>
+
+</body>
+</html>
